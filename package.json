@@ -1,0 +1,21 @@
+{
+  "name": "bookstore",
+  "version": "1.0.0",
+  "description": "Book store server",
+  "main": "src/server.ts",
+  "dependencies": {
+    "moment": "^2.30.1"
+  },
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "start:dev": "nodemon --exec ts-node src/server.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "ts-node": "^10.9.2",
+    "nodemon": "^3.1.4",
+    "tsconfig-paths": "^4.2.0"
+  }
+}
