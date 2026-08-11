@@ -402,15 +402,39 @@ admin backoffice — as two separate Express Routers from the start.
 
 **DEPENDENCIES:** Step 5.
 
-**IMPLEMENTATION:** Create `src/routerAdmin.ts` (later renamed, see Step
-11) and `src/controllers/restaurant.controller.ts` (object-literal pattern,
-same as Step 5). Mount both routers in `app.ts` on different base paths
-(`/` for SPA, `/admin` for the admin surface).
+**IMPLEMENTATION** (verified against the full diff, and adapted for
+bookStore — see naming note below):
+- `src/routerAdmin.ts` created (later renamed, see Step 11) — same
+  shape as `router.ts`: `express.Router()`, three GET routes
+  (`/`, `/login`, `/signup`) pointing at the new admin controller.
+- `src/controllers/admin.controller.ts` created — **bookStore naming
+  adaptation**: the original names this `restaurant.controller.ts` /
+  `restaurantController` (the original app's single privileged account
+  is a "restaurant"); for bookStore this is renamed to
+  `admin.controller.ts` / `adminController` (the bookstore's privileged
+  account = the store admin). **Apply this same
+  `restaurant → admin` substitution in every later step that references
+  `restaurant.controller.ts` / `restaurantController` /
+  `RESTAURANT` enum member** (Steps 9-41+) — keep it consistent for the
+  rest of the workflow.
+- `src/controllers/member.controller.ts`'s three page-serving handlers
+  (`goHome`/`getLogin`/`getSignup`) are **commented out** (not deleted),
+  with a `// REACT` marker comment added above the (now-empty) object —
+  signals that the SPA side will be a React client and no longer needs
+  server-rendered pages; `member.controller.ts` becomes a home for
+  JSON-API handlers only, starting Step 12+.
+- `src/router.ts`'s three matching GET routes are commented out too
+  (handlers they pointed to no longer exist as active code).
+- `app.ts`: add `import routerAdmin from "./routerAdmin"`; mount
+  `app.use("/admin", routerAdmin)` **before** `app.use("/", router)`,
+  with inline comments `// SSR: EJS` / `// SPA: REACT / Middleware design
+  patter[n]` — both preserved from the original, documenting *why* each
+  router exists side by side.
 
 **ARCHITECTURE:** **Dual-interface architecture**:
 - `router.ts` + `*.controller.ts` (member/product/order) → JSON REST API,
   consumed by an SPA frontend, JWT-cookie auth (built in Steps 42-45).
-- `router-admin.ts` + `restaurant.controller.ts` → server-rendered EJS
+- `router-admin.ts` + `admin.controller.ts` → server-rendered EJS
   admin panel, session-cookie auth (built in Steps 18-21), restricted to
   one privileged member type.
 Both surfaces share the same models/services underneath — they are two
@@ -419,9 +443,21 @@ target project's frontend approach differs (e.g. both could be REST APIs
 for two different clients) — the point is: **admin/privileged operations
 and public/user operations are architecturally separated at the router
 level from the very beginning**, not bolted on later with role checks
-scattered through one router.
+scattered through one router. **The SPA controller's page-handlers are
+retired in favor of a future JSON API, not left as dead competing routes**
+— comment them out rather than leaving both a page-serving and a
+future JSON handler under the same route.
 
-**VALIDATION:** Both routers respond independently on their base paths.
+**VALIDATION (bookStore, confirmed by running the server):**
+```
+GET /admin        → "Home Page"
+GET /admin/login  → "Login Page"
+GET /admin/signup → "Signup Page"
+GET /             → 404 (SPA page-routes intentionally disabled)
+```
+`npm run build` passes with no errors despite the unused
+`memberController`/import in `router.ts` (tsconfig has no
+`noUnusedLocals`/`noUnusedParameters`, matching the original).
 
 **ONLY PROCEED WHEN:** the two-router split exists and is mounted, since
 every later routing step attaches to one or the other specifically.
