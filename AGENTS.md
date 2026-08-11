@@ -41,12 +41,12 @@ sequence and the reasoning behind each step must be preserved.
 
 ## §1. Git Workflow Found (full chronological sequence)
 
-Legend: ✅ = real architectural step (detailed in §3) · ⛔ = excluded (see §2)
+Legend: ✅ = real architectural step (detailed in §3) · ⛔ = excluded (see §2) · 📝 = reference-only, no implementation (see §3)
 
 | # | Commit | Message | Status |
 |---|---|---|---|
 | 1 | `2d7ff6d` | feat: initial setup | ✅ Step 1 |
-| 2 | `29670b0` | feat: learningabout patterns | ⛔ |
+| 2 | `29670b0` | feat: learningabout patterns | 📝 Step 1a |
 | 3 | `5aa1f46` | feat: completed TASK L | ⛔ |
 | 4 | `80e3a7c` | feat: integration of environmental variables | ✅ Step 2 |
 | 5 | `25bf7e2` | feat: create train area | ⛔ |
@@ -133,15 +133,28 @@ guessed from the message alone:
 **A. Personal learning/practice commits** — touch only `train.py`,
 `train.ts`, `comment.ts`, or `src/server.ts`-as-scratchpad. These are the
 author's own TypeScript/Python/ML exercises, unrelated to the app's
-architecture (`29670b0`, `5aa1f46`†, `25bf7e2`, `30523c2`, `89f287a`,
+architecture (`5aa1f46`†, `25bf7e2`‡, `30523c2`, `89f287a`,
 `a6d949d`, `091cc4d`, `e535978`, `7ec029d`, `751b91b`, `0857b7b`, `9b888e5`,
 `8f6fbe1`, `b20cbc1`†, `ea6070a`†, `fa75ebb`, `4788a9f`).
+(`29670b0` is a related but distinct case — see Step 1a in §3: it is also
+pure TypeScript-fundamentals practice with zero package/dependency changes,
+but since it names the exact architectural vocabulary — MVC, DI, Middleware/
+Decorator patterns — used later in the real steps, it's kept as an optional
+reference note rather than fully dropped.)
 † = these three also carried one tiny incidental change (a `train` npm
 script + `tsx` devDependency in `5aa1f46`; a 1-line optional-chaining
 null-guard in `signup.js` in `b20cbc1`; a whitespace-only edit in
 `ea6070a`). None are architecturally meaningful — skip them; if the
 optional-chaining defensiveness (`?.` on `.files[0]`) is wanted, apply it
 naturally while implementing Step 33/34 (signup frontend), not as its own step.
+‡ `25bf7e2` ("create train area") — full diff verified: appends one line
+to `comment.ts` (`// CLUSTER => DATABASE => COLLECTION => DOCUMENT`, a
+personal note on MongoDB's storage hierarchy, mildly related to Step 3's
+subject matter but not itself an implementation), adds a `"traints":
+"nodemon --exec ts-node src/train.ts"` script to `package.json`, and
+creates `src/train.ts` containing only `console.log("Hello world")`. No
+package/dependency changes, no application code. Nothing to carry into
+the new project.
 
 **B. Editor/tooling noise** — `9f7bbc9` ("new folder") only adds
 `.vscode/extensions.json`. Not application architecture; adopt your own
@@ -189,6 +202,48 @@ domain logic.
 
 ---
 
+### Step 1a — TypeScript fundamentals reference (optional, no implementation)
+```
+COMMIT: 29670b0 — "feat: learningabout patterns"
+```
+**PURPOSE:** Not a feature step. The entire diff (75 insertions in
+`server.ts`) is **commented-out** TypeScript syntax notes — the previous
+working demo code (the `moment` import/console.log from Step 1) is itself
+commented out and replaced by a scratchpad of:
+- primitive vs. object types, union types (`number | string`)
+- an `interface Person { name, age, nation }` example
+- typed arrays (`string[]`, `(number|string)[]`)
+- a `class Person` with constructor
+- a closing list of **architecture vocabulary**: `MVC` (Model-View-
+  Controller), `DI` (Dependency Injection), `MVP` (Model-View-Presenter),
+  and design patterns `Middleware`, `Decorator`
+
+**DEPENDENCIES:** Step 1.
+
+**NEW PACKAGES:** None. Zero `package.json`/`package-lock.json` changes —
+this commit touches only `src/server.ts`, and only inside comments.
+
+**IMPLEMENTATION:** Nothing to implement in a target project — there is no
+executable change here. If you want the equivalent in the new project, it
+would be a personal `NOTES.md`/scratch file, not application code, and it
+is **not a dependency of any later step**.
+
+**ARCHITECTURE:** Notable only because the vocabulary listed here (MVC-
+style layering, DI-flavored service instantiation, Middleware pattern)
+foreshadows the real conventions established in Steps 6-9 — the author was
+naming the pattern before building it. No architectural decision is
+actually made in this commit itself.
+
+**VALIDATION:** N/A — no behavior to test.
+
+**ONLY PROCEED WHEN:** N/A — this step can be skipped entirely without
+affecting anything downstream.
+
+**NEXT STEP:** Step 2 — Environment variables (Step 1a is a side-note, not
+a prerequisite).
+
+---
+
 ### Step 2 — Environment variables
 ```
 COMMIT: 80e3a7c — "feat: integration of environmental variables"
@@ -198,22 +253,49 @@ COMMIT: 80e3a7c — "feat: integration of environmental variables"
 
 **DEPENDENCIES:** Step 1.
 
-**IMPLEMENTATION:** Add `dotenv` dependency; call `dotenv.config()` at the
-very top of the entry file, before any other import that reads
-`process.env`. Strip the old throwaway demo code out of `server.ts` down to
-a minimal shell. (The original also created `comment.ts` as a personal
-architecture-notes scratch file — optional, not required for the target
-project.)
+**IMPLEMENTATION** (verified from the full diff):
+- Add dependency `dotenv` — original pinned `^16.0.0`; **latest is `17.4.2`**
+  (see §7 for the full version table). `dotenv.config()` is called at the
+  very top of `server.ts`, before anything else.
+- `src/server.ts` is stripped down to just `import dotenv... ;
+  dotenv.config();` plus two commented-out sanity-check lines
+  (`console.log("PORT:", process.env.PORT)` /
+  `console.log("MONGO_URL:", process.env.MONGO_URL)` — left commented as a
+  manual-check reminder, not active code).
+- The Step 1a learning-notes block that had been living inside
+  `server.ts` is **moved verbatim** into a brand-new `comment.ts` at the
+  project root (not `src/`) — this is a pure file-relocation, no content
+  change, done so `server.ts` can become the real entry point without
+  losing the notes. `comment.ts` plays no runtime role (never imported by
+  anything) — it's a permanent scratch/reference file for the rest of the
+  project's history.
+- `tsconfig.json` changes **module resolution strategy**:
+  `module: "commonjs"` → `module: "NodeNext"`, adds
+  `moduleResolution: "NodeNext"` and `rootDir: "./src"`; **removes**
+  `baseUrl`/`paths` (the `node_modules/*` path-mapping from Step 1,
+  which nothing had actually used yet).
 
 **ARCHITECTURE:** Config-from-environment pattern established early;
 `.env` is git-ignored (already covered by Step 1's `.gitignore`). No env
-values are hardcoded anywhere from this point forward.
+values are hardcoded anywhere from this point forward. The
+`NodeNext`/`NodeNext` module switch is a real, load-bearing config
+decision made *here*, not at Step 1 — it changes how relative imports and
+package `exports` fields resolve for the rest of the project. If adapting
+to the **latest** TypeScript (§7: `5.2.2` → `7.0.2`), re-verify this
+setting still behaves as expected — `NodeNext` resolution is stricter
+about file extensions on relative imports in pure-ESM contexts; since this
+project stays CommonJS-at-runtime (`ts-node`, `require`-based `express`
+etc.), confirm `tsc --noEmit` and `ts-node` both still run clean after
+upgrading before treating this step as done.
 
 **VALIDATION:** Adding a variable to `.env` and reading `process.env.X`
-from `server.ts` returns the value at runtime.
+from `server.ts` returns the value at runtime; `npm run build` still
+succeeds under the new `tsconfig.json` module settings; `comment.ts`
+compiles (or is excluded) without breaking the build.
 
-**ONLY PROCEED WHEN:** `.env` loads correctly and nothing else in the app
-depends on it yet (DB/server don't exist yet).
+**ONLY PROCEED WHEN:** `.env` loads correctly, the build still succeeds
+under `NodeNext`, and nothing else in the app depends on env vars yet
+(DB/server don't exist yet).
 
 **NEXT STEP:** Step 3 — MongoDB connection.
 
@@ -1980,3 +2062,60 @@ separately-analyzed sequence.
 8. Never skip ahead, never combine steps, never implement a later step's
    functionality while working on an earlier one, even if it seems
    convenient.
+
+---
+
+## §7. Package versions — original (locked) vs. latest (recommended)
+
+Captured 2026-08-11. Per the user's choice, the new project should install
+**latest** versions, not the original's pinned ones — but several packages
+jumped **major** versions since this workflow was written, which can break
+the exact API shape a step describes. Re-verify each flagged step's
+"Validation" against the new major version's docs/changelog before marking
+that step done; don't assume the original's code sample is still
+byte-for-byte correct.
+
+| Package | Original (locked) | Latest | Used in | Notes |
+|---|---|---|---|---|
+| `express` | `4.17.3` | **`5.2.1`** | Step 4+ | ⚠️ Major. Express 5: `path-to-regexp` v8 (wildcard/optional route syntax changed, e.g. no more bare `*`), async errors in route handlers now auto-forward to error middleware, some removed methods (`res.send(status)`, `app.del`). Re-check every router file. |
+| `mongoose` | `6.2.9` | **`9.9.2`** | Step 3+ | ⚠️ Major ×3. Mongoose 7 dropped callbacks, 8 changed several strict-mode/query defaults and dropped old Node, 9 continues that line. Re-check `Schema` option defaults, `.exec()` typing, and `connect()` options object (many old options are now no-ops/removed). |
+| `ejs` | `3.1.6` | **`6.0.1`** | Step 16+ | ⚠️ Major. Re-check `include()` syntax and any renamed render options before trusting Step 16/17/32's EJS snippets verbatim. |
+| `jsonwebtoken` | `8.5.1` | **`9.0.3`** | Step 42+ | ⚠️ Major. `jwt.sign`/`jwt.verify` now more strictly require an explicit `algorithm`/`algorithms` option in some configurations; re-verify `AuthService.createToken`/`checkAuth` against the current default-algorithm behavior. |
+| `bcryptjs` | `2.4.3` | **`3.0.3`** | Step 12+ | Major, but API (`genSalt`/`hash`/`compare`) is stable; low risk. |
+| `multer` | `1.4.5-lts.1` | **`2.2.0`** | Step 24+ | ⚠️ Major, security-motivated rewrite. Re-check error handling (`MulterError` shape) and default field/size limits in `uploader.ts` — don't assume 1.x defaults still apply. |
+| `uuid` | `8.3.2` | **`14.0.1`** | Step 24+ | ⚠️ Major ×6, package is ESM-first now. `import { v4 } from "uuid"` still works, but confirm it resolves cleanly under this project's `NodeNext` module setting (Step 2) — this is exactly the kind of interaction §0.6 says to verify, not assume. |
+| `dotenv` | `16.0.0` | **`17.4.2`** | Step 2 | Major, but `config()` API unchanged; low risk. |
+| `connect-mongodb-session` | `3.1.1` | **`5.0.0`** | Step 18 | Major — re-check constructor options against current docs before trusting Step 18 verbatim. |
+| `express-session` | `1.17.3` | `1.19.0` | Step 18 | Minor, low risk. |
+| `cors` | `2.8.6` | `2.8.6` | Step 58 | Unchanged. |
+| `cookie-parser` | `1.4.7` | `1.4.7` | Step 4+ | Unchanged. |
+| `morgan` | `1.10.0` | `1.11.0` | Step 4 | Minor, low risk. |
+| `typescript` | `5.2.2` | **`7.0.2`** | Step 1 | ⚠️ Major ×2. Re-verify `tsconfig.json` options from Steps 1-2 still mean the same thing (compiler defaults/strictness have tightened across 6→7). |
+| `ts-node` | `10.9.1` | `10.9.2` | Step 1 | Patch, low risk. |
+| `nodemon` | `3.0.2` | `3.1.14` | Step 1 | Minor, low risk. |
+| `tsconfig-paths` | `4.2.0` | `4.2.0` | Step 1 | Unchanged (and removed again in Step 2 anyway, see Step 2's `baseUrl`/`paths` removal). |
+
+**Do not carry these over into the new project** — they exist in the
+original's `package.json` but are either unused by the real application or
+purely artifacts of the excluded learning commits (§2):
+- `moment` — added in Step 1 as a toolchain sanity-check import, never used
+  anywhere in the actual app logic (Steps 2+ never import it again). If the
+  new project needs date handling, use `dayjs` or the native `Intl`/`Date`
+  APIs instead — `moment` has been in maintenance-mode/legacy status for
+  years.
+- `kill-port` — present in the original's `dependencies` but never
+  `import`ed by any source file found in this repo; likely a manually-run
+  CLI tool during development, not a runtime dependency.
+- `tsx` — added by the excluded `5aa1f46` commit solely to run
+  `train.ts` (personal practice), not used by `server.ts`/`app.ts`.
+- `mongodb` (the driver, as a *direct* dependency) — `mongoose` already
+  depends on it; the original's explicit direct dependency on it is
+  redundant, don't add it separately in the new project.
+
+**Type packages**: pair every runtime package above with its matching
+`@types/*` devDependency at its own latest version (`@types/express`,
+`@types/cors`, `@types/cookie-parser`, `@types/morgan`, `@types/multer`,
+`@types/jsonwebtoken`, `@types/bcryptjs`, `@types/express-session`,
+`@types/node`) — all were already latest-aligned or one minor behind as of
+this capture, so no separate breaking-change risk beyond what's already
+flagged above for their runtime counterparts.
