@@ -13,6 +13,43 @@ sequence and the reasoning behind each step must be preserved.
 
 ---
 
+## §0a. bookStore naming adaptations (standing rule — apply in every step)
+
+Per user instruction: names are adapted to the **bookStore** domain as they
+are carried over from the original (food-delivery/"burak") project, not
+copied literally. Domain-neutral names are left unchanged; only names tied
+to the original's restaurant/food concept are translated. This table is
+authoritative for every step from here on — consult it before naming any
+new file/class/enum, instead of re-deciding case by case.
+
+| Original (burak) | bookStore | Status | Notes |
+|---|---|---|---|
+| `Member` (schema/service/controller/types) | `Member` | unchanged | domain-neutral (a user account), applies to any app |
+| `MemberType.USER` | `MemberType.USER` | unchanged | domain-neutral |
+| `MemberType.RESTAURANT` | `MemberType.ADMIN` | ✅ done (Step 6/8) | the one privileged account = the bookstore's admin, not a restaurant |
+| `restaurant.controller.ts` / `restaurantController` | `admin.controller.ts` / `adminController` | ✅ done (Step 6) | |
+| `routerAdmin.ts` → `router-admin.ts` (Step 11 rename) | same | unchanged | already domain-neutral |
+| `Product` (schema/service/controller/types/enum, files `Product.*`) | `Book` (`Book.*`) | ⏳ apply starting Step 22/25 | bookStore sells books, not restaurant dishes |
+| `ProductCollection` (DISH/SALAD/DESSERT/DRINK/OTHER) | `BookGenre` — exact members TBD at Step 25 (e.g. FICTION/NONFICTION/SCIENCE/CHILDREN/OTHER) | ⏳ decide at Step 25 | needs a real category set for books, not a 1:1 value copy |
+| `ProductSize` (SMALL/NORMAL/LARGE/SET) | needs a book-appropriate replacement or removal — decide at Step 25 (candidate: `BookFormat`: PAPERBACK/HARDCOVER/EBOOK/AUDIOBOOK) | ⏳ decide at Step 25 | "size" as food-portion doesn't map to books; don't copy verbatim |
+| `ProductVolume` (0.5/1/1.2/1.5/2 — litres) | likely **dropped** (no book equivalent) — decide at Step 25 | ⏳ decide at Step 25 | litre-volume is drink-specific; flag as a case where the original field has no target-domain equivalent (§0.6) rather than forcing a fake mapping |
+| `ProductStatus` (PAUSE/PROCESS/DELETE) | `BookStatus` (same PAUSE/PROCESS/DELETE shape) | ⏳ apply at Step 25 | shape/logic identical, only the type name changes |
+| `getRestaurant` API | `getAdmin` (or `getStoreInfo`) | ⏳ apply at Step 49 | matches the `MemberType.ADMIN` rename |
+| `Order` / `OrderItem` (schema/service/controller/types) | `Order` / `OrderItem` | unchanged | domain-neutral e-commerce terms |
+| `View` / `ViewGroup.PRODUCT` | `View` / `ViewGroup.BOOK` | ⏳ apply at Step 52 | matches the Product→Book rename |
+| `memberImage` field | `memberImage` | unchanged | domain-neutral |
+| `productImages` field | `bookImages` | ⏳ apply at Step 27 | matches Product→Book |
+| `uploads/products/` | `uploads/books/` | ⏳ apply at Step 24/27 | matches Product→Book |
+| delivery-fee business rule / `orderDelivery` | unchanged (`orderDelivery`, "delivery") | unchanged | generic e-commerce shipping concept, not restaurant-specific enough to need renaming |
+
+**Rule going forward:** when a step's original commit touches a
+`Product`/`restaurant`-named file or symbol not yet in this table, extend
+this table with the bookStore-adapted name *before* implementing that step
+— don't invent an ad-hoc name inline without recording it here, since
+later steps will need the same mapping.
+
+---
+
 ## §0. STRICT SEQUENTIAL EXECUTION PROTOCOL — read before doing anything
 
 1. **Initial Setup (Step 1) always comes first.** Never jump to a later step.
@@ -476,10 +513,20 @@ directly.
 
 **DEPENDENCIES:** Step 6.
 
-**IMPLEMENTATION:** Create `src/models/Member.service.ts` as a class
-(`class MemberService { ... }`, instantiated once per controller file:
-`const memberService = new MemberService()`). Controller methods call
-`memberService.xxx(...)`, never a Mongoose model directly.
+**IMPLEMENTATION** (verified against the full diff — smaller than it
+sounds): `src/models/Member.service.ts` is created as an **empty class
+stub** — just `class MemberService { constructor() {} }`, no methods yet.
+`admin.controller.ts` (bookStore's rename of `restaurant.controller.ts`,
+per §0a) gets one new line: `import MemberService from
+"../models/Member.service"` — **imported but not yet instantiated**; the
+`const memberService = new MemberService()` + actual method calls don't
+appear until Step 12 (signup). No `Member` naming adaptation needed here
+— `Member` is domain-neutral per §0a.
+
+**PATTERN ESTABLISHED HERE, USED FROM STEP 12 ONWARD:** once real methods
+exist, each controller file instantiates its own service once at module
+scope (`const memberService = new MemberService()`) and calls
+`memberService.xxx(...)` — never touches Mongoose directly.
 
 **ARCHITECTURE:** **Layering rule fixed for the rest of the project:**
 `router → controller (object-literal, HTTP concerns: req/res/status
