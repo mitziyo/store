@@ -598,14 +598,28 @@ each inventing its own.
 
 **DEPENDENCIES:** Steps 1-8 (needs controllers/services to retrofit).
 
-**IMPLEMENTATION:** `src/libs/Error.ts`: `HttpCode` enum (200/201/304/400/
-401/403/404/500), `Message` enum (human-readable error strings, grown
-incrementally in later steps as new failure cases appear), and a custom
-`class Errors extends Error { code: HttpCode; message: Message; static
-standard = {...} }`. `src/libs/config.ts`: shared constants (`AUTH_TIMER`,
-`MORGAN_FORMAT`) and a `shapeIntoMongoseObjectId` helper (coerces a
-string id to `mongoose.Types.ObjectId` only if it isn't one already —
-used everywhere a raw `req.params.id` reaches a Mongoose query).
+**IMPLEMENTATION** (corrected against the full diff):
+- `src/libs/Error.ts`: `HttpCode` enum (200/201/304/400/401/403/404/500),
+  `Message` enum with **only 4 values at this point**
+  (`SOMETHING_WENT_WRONG`, `NO_DATA_FOUND`, `CREATE_FAILED`,
+  `UPDATE_FAILED` — grows in later steps), `class Errors extends Error {
+  code: HttpCode; message: Message; constructor(code, message) {...} }`.
+  No `static standard` fallback yet.
+- `src/libs/config.ts`: **only `MORGAN_FORMAT`** at this point —
+  `AUTH_TIMER`/`shapeIntoMongoseObjectId` come later, when first needed.
+- **`morgan` (HTTP request logger) is added here too** — `morgan` +
+  `@types/morgan` deps, wired into `app.ts`'s `1 - ENTRANCE` section:
+  `app.use(morgan(MORGAN_FORMAT))`.
+- Cosmetic: `admin.controller.ts` (bookStore's rename of
+  `restaurant.controller.ts`) handlers get a `console.log('<name>')` line
+  each — optional, no architectural weight.
+
+No `Product`/`restaurant` naming involved in this step — nothing new to
+add to the §0a table here. **API-naming reminder (per user instruction):**
+when a step introduces an actual REST endpoint name tied to the original
+domain (e.g. Step 49's `getRestaurant`), rename it per §0a
+(`getRestaurant → getAdmin`) at the point it's implemented — not before,
+since the endpoint doesn't exist yet.
 
 **ARCHITECTURE:** **Uniform controller error contract**: every controller
 method wraps its body in `try { ... } catch (err) { if (err instanceof
@@ -639,13 +653,20 @@ for pages, POST for form submission, to be filled in over the next steps).
 
 **DEPENDENCIES:** Step 6 (admin router exists), Step 9 (error pattern).
 
-**IMPLEMENTATION:** Add GET/POST route pairs on the admin router
-(`goHome`, `getLogin`/`processLogin`, `getSignup`/`processSignup`) pointing
-at `restaurant.controller.ts` methods (bodies filled progressively in
-Steps 12-14).
+**IMPLEMENTATION** (verified against the full diff): Add
+`processLogin`/`processSignup` stub handlers to `admin.controller.ts`
+(bookStore rename, §0a) — `res.send("DONE")` bodies, real logic in Steps
+12-14. In `routerAdmin.ts`, chain `.get("/login", getLogin).post("/login",
+processLogin)` (same for `/signup`). Add section-header comments —
+`/** Admin */` (bookStore rename of `/** Restaurant */`) above the routes
+just added, then two placeholder headers `/** Book */` (bookStore rename
+of `/** Product */`, per §0a) and `/** User */` — pre-declaring where
+Step 22's book routes and Step 30's user routes slot in later.
 
 **ARCHITECTURE:** **GET-renders-a-page / POST-processes-the-form** pairing
-convention for every SSR admin route pair from here on.
+convention for every SSR admin route pair from here on. Router files get
+domain-section comment headers up front, left empty until the
+corresponding step fills them.
 
 **VALIDATION:** Routes are registered and reachable (may still return
 stub/placeholder responses at this point).
@@ -666,7 +687,8 @@ naming convention.
 **DEPENDENCIES:** Step 10.
 
 **IMPLEMENTATION:** Rename `src/routerAdmin.ts` → `src/router-admin.ts`
-(pure rename, update the one import in `app.ts`).
+(pure rename, update the one import in `app.ts`). Skip `kill-port` (never
+imported anywhere in the original either — see §7).
 
 **ARCHITECTURE:** **Naming convention locked in: kebab-case for
 filenames** (`router-admin.ts`, later `member.controller.ts`,
