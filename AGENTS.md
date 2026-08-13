@@ -715,17 +715,39 @@ COMMIT: dcb3a37 — "feat: develop signup process"
 
 **DEPENDENCIES:** Steps 8 (schema), 9 (errors), 10 (route wiring).
 
-**IMPLEMENTATION:** `src/libs/types/member.ts`: `MemberInput`,
-`LoginInput`, `Member` interfaces (mirrors the schema shape for
-compile-time safety at the controller/service boundary).
-`MemberService.processSignup`: reject if a `RESTAURANT`-type member already
-exists (**business rule: exactly one restaurant/admin account allowed**),
-hash the password, create the document, blank the password before
-returning it.
+**IMPLEMENTATION** (corrected against the full diff):
+- `src/libs/types/member.ts`: `Member` and `MemberInput` interfaces.
+  **`LoginInput` not created here** — added in Step 13.
+- `MemberService.processSignup(input)`: reject if an `ADMIN`-type member
+  already exists (bookStore rename of `RESTAURANT`, §0a —
+  **business rule: exactly one admin account allowed**),
+  `this.memberModel.create(input)`, blank `result.memberPassword` before
+  returning it.
+- ⚠️ **`memberPassword` stored as plain text at this point — no `bcrypt`
+  yet.** Matches the original exactly; hashing arrives in Step 14. Flag
+  this explicitly rather than "fixing" it early, to preserve workflow
+  fidelity — Step 14 is where this gets corrected.
+- `adminController.processSignup` becomes `async`; instantiates
+  `const memberService = new MemberService()` **inline inside the
+  handler** (module-scope singleton comes later, untracked exact commit).
+  Errors caught and sent raw: `res.send(err)`.
 
-**ARCHITECTURE:** Password hashing happens **in the service layer**, never
-in the controller or schema. Passwords are always stripped from the
-returned object before it goes anywhere near a response/session.
+**ARCHITECTURE:** Signup business logic lives in the service layer, never
+the controller. Passwords are stripped from the *response* — but that is
+currently the only protection; not cryptographically protected at rest
+until Step 14.
+
+**§7 mongoose-9 breaking change, hit for real at this step (bookStore):**
+returning `this.memberModel.create(input)` as `Promise<Member>` failed to
+typecheck under mongoose `^9.9.2`. Fixed by: (1) in `libs/types/member.ts`,
+`_id: mongoose.Types.ObjectId` instead of `import { ObjectId } from
+"mongoose"` (that import no longer resolves to the runtime value type in
+mongoose 9); (2) `Member.service.ts`'s `processSignup` returns
+`result as unknown as Member` instead of the bare Document (mongoose 9's
+auto-inferred type allows `string | null` on optional fields where our
+hand-written interface only allows `string | undefined`). **Apply the same
+two fixes proactively in Book/Order/View services** when those steps
+arrive — don't wait to hit the same build error again.
 
 **VALIDATION:** First signup succeeds; a second attempt to create a
 `RESTAURANT` member is rejected with the correct `Errors`.
