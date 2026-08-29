@@ -1,16 +1,16 @@
 import express from "express";
 const routerAdmin = express.Router();
-import adminController from "./controllers/admin.controller";
+import storeController from "./controllers/store.controller";
 
-/** Admin */
-routerAdmin.get("/", adminController.goHome);
+/** Store */
+routerAdmin.get("/", storeController.goHome);
 routerAdmin
-  .get("/login", adminController.getLogin)
-  .post("/login", adminController.processLogin);
+  .get("/login", storeController.getLogin)
+  .post("/login", storeController.processLogin);
 
 routerAdmin
-  .get("/signup", adminController.getSignup)
-  .post("/signup", adminController.processSignup);
+  .get("/signup", storeController.getSignup)
+  .post("/signup", storeController.processSignup);
 
 /** Book */
 /** User */

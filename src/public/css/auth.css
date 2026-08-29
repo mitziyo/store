@@ -1,0 +1,155 @@
+.auth-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #08070c;
+  background-image: radial-gradient(ellipse at bottom, #4c2fce 0%, #241a5e 30%, #08070c 65%);
+  overflow: hidden;
+}
+
+.auth-topbar {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 50px;
+  box-sizing: border-box;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.auth-logo-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7c6cf6, #4c2fce);
+  font-size: 14px;
+}
+
+.auth-topbar-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.auth-topbar-link {
+  color: #b9b3d9;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.auth-topbar-link:hover {
+  color: #ffffff;
+}
+
+.auth-card {
+  position: relative;
+  z-index: 2;
+  margin-top: 8vh;
+  width: 380px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.auth-card h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.auth-card .auth-subtitle {
+  margin: 8px 0 30px;
+  color: #b9b3d9;
+  font-size: 15px;
+}
+
+.auth-field {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 14px;
+}
+
+.auth-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #b9b3d9;
+  font-size: 13px;
+}
+
+.auth-field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.auth-field input:-webkit-autofill,
+.auth-field input:-webkit-autofill:hover,
+.auth-field input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #201a3d inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.auth-field input::placeholder {
+  color: #6f6a8c;
+}
+
+.auth-btn {
+  width: 100%;
+  height: 50px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #7c6cf6, #5b3fe0);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-btn:hover {
+  background: linear-gradient(135deg, #8b7cf8, #6b4ff0);
+}
+
+.auth-switch {
+  margin-top: 20px;
+  color: #b9b3d9;
+  font-size: 14px;
+}
+
+.auth-switch a {
+  color: #9d8bf9;
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}

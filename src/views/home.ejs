@@ -1,0 +1,48 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" type="text/css" href="/css/auth.css" />
+<link rel="stylesheet" type="text/css" href="/css/home.css" />
+
+<body>
+  <div class="home-container">
+    <div class="hero-frame">
+      <img class="hero-bg" src="/img/book-ship-hero.webp" alt="A ship sailing out of an open book, surrounded by clouds" />
+
+      <div class="navigation-menu">
+        <a class="auth-logo" href="/admin">
+          <span class="auth-logo-mark">LB</span>
+          LightBooks
+        </a>
+        <ul class="nav">
+          <li class="nav-item" style="cursor: pointer">
+            <a class="nav-link active" href="/admin">Home</a>
+          </li>
+          <% if (typeof member === "undefined" || !member) { %>
+          <li class="nav-item" style="cursor: pointer">
+            <a class="nav-link" href="/admin/login">Login</a>
+          </li>
+          <li class="nav-item" style="cursor: pointer">
+            <a class="nav-link" href="/admin/signup">Signup</a>
+          </li>
+          <% } else { %>
+          <li class="nav-item" style="cursor: pointer">
+            <a class="nav-link" href="/admin/book/all">Books</a>
+          </li>
+          <li class="nav-item" style="cursor: pointer">
+            <a class="nav-link" href="/admin/user/all">Users</a>
+          </li>
+          <li
+            class="nav-item"
+            style="cursor: pointer"
+            onclick="return confirm('Do you want to logout?')"
+          >
+            <a class="nav-link" href="/admin/logout">Logout</a>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+
+<%- include('includes/footer') %>

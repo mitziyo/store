@@ -26,8 +26,8 @@ new file/class/enum, instead of re-deciding case by case.
 |---|---|---|---|
 | `Member` (schema/service/controller/types) | `Member` | unchanged | domain-neutral (a user account), applies to any app |
 | `MemberType.USER` | `MemberType.USER` | unchanged | domain-neutral |
-| `MemberType.RESTAURANT` | `MemberType.ADMIN` | ✅ done (Step 6/8) | the one privileged account = the bookstore's admin, not a restaurant |
-| `restaurant.controller.ts` / `restaurantController` | `admin.controller.ts` / `adminController` | ✅ done (Step 6) | |
+| `MemberType.RESTAURANT` | `MemberType.STORE` | ✅ revised (2026-08-30) | corrected from an earlier `ADMIN` naming: burak's `RESTAURANT` names the business entity itself (the restaurant's own account), not a generic role — the direct bookStore equivalent is the store's own account, `STORE`, not `ADMIN` |
+| `restaurant.controller.ts` / `restaurantController` | `store.controller.ts` / `storeController` | ✅ revised (2026-08-30) | same reasoning — matches the business-entity naming, not a generic "admin" label. Note: the *panel infrastructure* (`router-admin.ts` filename, the `/admin` URL prefix, the `AdminRequest` type) stays "admin" unchanged — that layer was already generically named in burak itself (independent of the RESTAURANT/STORE business-entity naming), so it needed no correction |
 | `routerAdmin.ts` → `router-admin.ts` (Step 11 rename) | same | unchanged | already domain-neutral |
 | `Product` (schema/service/controller/types/enum, files `Product.*`) | `Book` (`Book.*`) | ⏳ apply starting Step 22/25 | bookStore sells books, not restaurant dishes |
 | `ProductCollection` (DISH/SALAD/DESSERT/DRINK/OTHER) | `BookGenre` — exact members TBD at Step 25 (e.g. FICTION/NONFICTION/SCIENCE/CHILDREN/OTHER) | ⏳ decide at Step 25 | needs a real category set for books, not a 1:1 value copy |
@@ -765,16 +765,29 @@ COMMIT: 0cdc7b7 — "feat: develop restaurant login process"
 ```
 **PURPOSE:** Implement credential verification for the admin account.
 
-**DEPENDENCIES:** Step 12 (needs a hashed password to compare against).
+**DEPENDENCIES:** Step 12.
 
-**IMPLEMENTATION:** `MemberService.processLogin`: find by `memberNick`
-(projecting only `memberNick`+`memberPassword`), 404 if not found, `bcrypt
-.compare` the password, 401 on mismatch, otherwise return the full member
-document.
+**IMPLEMENTATION** (corrected against the full diff):
+- `src/libs/types/member.ts`: `LoginInput` (`memberNick`,
+  `memberPassword`).
+- `Message` enum gains `USED_NICK_PHONE`, `NO_MEMBER_NICK`,
+  `WRONG_PASSWORD`.
+- `MemberService.processLogin(input)`: find by `memberNick` (projecting
+  `memberNick`+`memberPassword`), 404 (`NO_MEMBER_NICK`) if not found.
+  ⚠️ **Plain string equality, not `bcrypt.compare`** —
+  `input.memberPassword === member.memberPassword` (Step 12 still hasn't
+  hashed anything). 401 (`WRONG_PASSWORD`) on mismatch, else
+  `findById(member._id).exec()`. **No `memberStatus`/blocked-member check
+  yet.**
+- `adminController.processLogin` becomes `async`, same inline-service +
+  raw-`res.send(...)` shape as `processSignup`.
 
-**ARCHITECTURE:** Login always fetches a minimal field-projected document
-first for the credential check, then a full re-fetch by id on success —
-avoids ever holding the password hash longer than necessary.
+**ARCHITECTURE:** Login fetches a minimal projected document first, then
+a full re-fetch by id on success. The response omits the password because
+`memberPassword` has `select: false` in the schema (Step 8) — schema-level
+protection, not something this step's code does itself. Remember to apply
+the `mongoose.Types.ObjectId` / `as unknown as Member` adaptation from
+Step 12 here too if the return type ever fights the compiler the same way.
 
 **VALIDATION:** Correct credentials log in; wrong password / unknown nick
 return the correct distinct `Errors`.

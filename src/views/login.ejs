@@ -1,0 +1,39 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" type="text/css" href="/css/auth.css" />
+
+<body>
+  <div class="auth-page">
+    <div class="auth-topbar">
+      <a class="auth-logo" href="/admin">
+        <span class="auth-logo-mark">LB</span>
+        LightBooks
+      </a>
+      <div class="auth-topbar-links">
+        <a class="auth-topbar-link" href="/admin">Home</a>
+        <a class="auth-topbar-link" href="/admin/login">Login</a>
+        <a class="auth-topbar-link" href="/admin/signup">Signup</a>
+      </div>
+    </div>
+
+    <form class="auth-card" action="/admin/login" METHOD="POST">
+      <h1>Welcome back</h1>
+      <p class="auth-subtitle">Log in to LightBooks Store</p>
+
+      <div class="auth-field">
+        <label>Store *</label>
+        <input type="text" name="memberNick" class="member-nick" placeholder="Store username" value="" autocomplete="off" required />
+      </div>
+      <div class="auth-field">
+        <label>Password *</label>
+        <input type="password" name="memberPassword" class="member-password" placeholder="Password" value="" autocomplete="off" required />
+      </div>
+
+      <button class="auth-btn" name="login" type="submit">Login</button>
+
+      <p class="auth-switch">Not registered yet? <a href="/admin/signup">Create one</a></p>
+    </form>
+  </div>
+</body>
+
+<%- include('includes/footer') %>

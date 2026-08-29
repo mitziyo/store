@@ -1,0 +1,79 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" type="text/css" href="/css/auth.css" />
+<link rel="stylesheet" type="text/css" href="/css/signup.css" />
+
+<body>
+  <div class="auth-page">
+    <div class="auth-topbar">
+      <a class="auth-logo" href="/admin">
+        <span class="auth-logo-mark">LB</span>
+        LightBooks
+      </a>
+      <div class="auth-topbar-links">
+        <a class="auth-topbar-link" href="/admin">Home</a>
+        <a class="auth-topbar-link" href="/admin/login">Login</a>
+        <a class="auth-topbar-link" href="/admin/signup">Signup</a>
+      </div>
+    </div>
+
+    <form
+      class="auth-card auth-card--wide"
+      onsubmit="return validateSignupForm()"
+      action="/admin/signup"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <h1>Create your store</h1>
+      <p class="auth-subtitle">Sign up to manage LightBooks</p>
+
+      <div class="auth-row">
+        <div class="auth-field">
+          <label>Store *</label>
+          <input type="text" name="memberNick" class="member-nick" placeholder="Store username" value="" autocomplete="off" />
+        </div>
+        <div class="auth-field">
+          <label>Phone *</label>
+          <input type="text" name="memberPhone" class="member-phone" placeholder="Phone" value="" autocomplete="off" />
+        </div>
+      </div>
+      <div class="auth-row">
+        <div class="auth-field">
+          <label>Password *</label>
+          <input type="password" name="memberPassword" class="member-password" placeholder="Password" value="" autocomplete="off" />
+        </div>
+        <div class="auth-field">
+          <label>Repeat password *</label>
+          <input type="password" name="confirmPassword" class="confirm-password" placeholder="Repeat password" value="" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="auth-upload-row">
+        <img class="upload-img-frame" src="/img/default.jpg" />
+        <div class="auth-upload-info">
+          <span class="auth-upload-title">Store image</span>
+          <div class="file-box">
+            <input class="upload-name" value="Choose image" disabled="disabled" />
+            <label for="input-file" class="file-input-label">Upload Image</label>
+            <input
+              type="file"
+              id="input-file"
+              class="upload-hidden member-image"
+              name="memberImage"
+            />
+          </div>
+        </div>
+      </div>
+
+      <input name="memberType" value="STORE" hidden />
+
+      <button class="auth-btn" name="signup" type="submit">Signup</button>
+
+      <p class="auth-switch">Already signed up? <a href="/admin/login">Login</a></p>
+    </form>
+  </div>
+
+  <script type="text/javascript" src="/js/signup.js"></script>
+</body>
+
+<%- include('includes/footer') %>
