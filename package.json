@@ -4,7 +4,7 @@
   "description": "Book store server",
   "main": "src/server.ts",
   "dependencies": {
-    "connect-mongodb-session": "^5.0.0",
+    "connect-mongo": "^6.0.0",
     "dotenv": "^17.4.2",
     "ejs": "^6.0.1",
     "express": "^5.2.1",
@@ -19,7 +19,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@types/connect-mongodb-session": "^2.4.8",
     "@types/ejs": "^3.1.5",
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.19.0",

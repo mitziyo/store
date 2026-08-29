@@ -4,14 +4,13 @@ import router from "./router"; // SPA/REST router ("/")
 import routerAdmin from "./router-admin"; // SSR/EJS admin router ("/admin")
 import morgan from "morgan"; // har bir HTTP-so'rovni konsolga log qiladi
 import session from "express-session"; // login-holatini cookie orqali saqlaydi
-import ConnectMongoDB from "connect-mongodb-session"; // sessiyalarni xotirada emas, MongoDB'da saqlash uchun
+import MongoStore from "connect-mongo"; // sessiyalarni xotirada emas, MongoDB'da saqlash uchun
 import { MORGAN_FORMAT } from "./libs/config"; // morgan log-formati
 import { T } from "./libs/types/common"; // umumiy index-turi ({[key:string]:any})
 
-const MongoDBStore = ConnectMongoDB(session);
-const store = new MongoDBStore({
-  uri: String(process.env.MONGO_URL),
-  collection: "sessions",
+const store = MongoStore.create({
+  mongoUrl: String(process.env.MONGO_URL),
+  collectionName: "sessions",
 });
 
 /** 1 - ENTRANCE **/
