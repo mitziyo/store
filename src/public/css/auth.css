@@ -29,6 +29,10 @@
   font-weight: 700;
 }
 
+.auth-logo:hover {
+  text-decoration: none;
+}
+
 .auth-logo-mark {
   display: flex;
   align-items: center;

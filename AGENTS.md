@@ -908,6 +908,13 @@ any markup used on 2+ pages moves to `views/includes/`.
 **VALIDATION:** All 5 pages still render correctly and now share identical
 header/footer.
 
+**DEVIATION CAUGHT (2026-08-30):** `footer.ejs` briefly held `</body></html>`
+while every page view also closed its own `</body>` — a duplicate-tag bug
+not present in burak's actual `f7ff4d3` (whose `footer.ejs` is only
+`</html>`, since each page closes its own `<body>`). Confirmed via a live
+render (`curl` showed two `</body>` lines) and fixed by trimming
+`footer.ejs` back to just `</html>`, matching burak's real commit.
+
 **ONLY PROCEED WHEN:** no page has inline-duplicated header/footer markup
 left.
 
@@ -926,14 +933,22 @@ will get in Step 42+).
 **DEPENDENCIES:** Step 3 (Mongo connection, session store lives in Mongo),
 Step 4 (`app.ts`).
 
-**IMPLEMENTATION:** Add `express-session` + `connect-mongodb-session`. In
-`app.ts`: build a `MongoDBStore` (`uri: MONGO_URL`, `collection:
-"sessions"`), register `session({ secret: SESSION_SECRET, cookie: {
-maxAge }, store, resave: true, saveUninitialized: true })` **before** the
-routers are mounted. Add a small middleware right after that copies
-`req.session.member` onto `res.locals.member` so every EJS view can read
-the logged-in member without each controller passing it explicitly.
-`SESSION_SECRET` added to `.env` (extends Step 2).
+**IMPLEMENTATION:** Add `express-session` + `connect-mongo` (**deviation
+from burak**: burak's own history uses `connect-mongodb-session`, but that
+package bundles its own `bson@6.x` which conflicts with `mongoose@9`'s
+`bson@7.x` — throws "Unsupported BSON version" inside `session.save()`,
+silently dropping `req.session.member` while the redirect still fires.
+`connect-mongo` shares mongoose's own driver tree, so no separate BSON
+version exists to conflict; burak avoids this only because its own
+`mongoose@^6.2.9` + `connect-mongodb-session@^3.1.1` happen to share one
+`bson@4.7.2`). In `app.ts`: build the store via `MongoStore.create({
+mongoUrl: MONGO_URL, collectionName: "sessions" })`, register
+`session({ secret: SESSION_SECRET, cookie: { maxAge }, store, resave:
+true, saveUninitialized: true })` **before** the routers are mounted. Add
+a small middleware right after that copies `req.session.member` onto
+`res.locals.member` so every EJS view can read the logged-in member
+without each controller passing it explicitly. `SESSION_SECRET` added to
+`.env` (extends Step 2).
 
 **ARCHITECTURE:** **Two parallel, independent auth mechanisms by design**:
 admin/SSR = server-side session in Mongo; SPA/API = stateless JWT in a
@@ -1349,6 +1364,19 @@ itself.
 correct against real backend data.
 
 **ONLY PROCEED WHEN:** manual visual QA of all 5 pages passes.
+
+**DONE EARLY, OUT OF ORDER (2026-08-30):** the Home/Login/Signup slice of
+this step (plus Step 33's `signup.js` validation) is already built —
+`auth.css`, `home.css`, `signup.css`, `signup.js`, and all 3 views were
+rewritten ahead of Steps 22-31, deliberately **not** copying burak's own
+CSS/design. Instead they use `bstore-react`'s actual brand tokens (color
+`#4285f4`, `Open Sans`, `.bj_theme_btn`-derived button system) scanned
+directly from that project's SCSS, since burak's visual design was never
+the target look for LightBooks. The signup image-upload widget was also
+redesigned away from burak's exact layout (circular avatar + camera icon,
+not a direct copy). Still pending: the `products.css`/`users.css`
+equivalents (Book/User pages), which can't be built meaningfully until
+Steps 22-31 give them real backend data.
 
 **NEXT STEP:** Step 33 — Signup form validation.
 

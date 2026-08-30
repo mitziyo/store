@@ -163,9 +163,11 @@
 }
 
 .hero-banner__book {
-  max-width: 380px;
+  max-width: 320px;
   width: 100%;
   height: auto;
   border-radius: 16px;
   box-shadow: 0 30px 60px -15px rgba(32, 33, 36, 0.25);
+  position: relative;
+  top: 16px;
 }
