@@ -3,7 +3,9 @@ import { T } from "../libs/types/common";
 import MemberService from "../models/Member.service";
 import { MemberInput, LoginInput, AdminRequest } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
-import { Message } from "../libs/Error"; // NOT_AUTHENTICATED xabari uchun
+// Start 2
+import Errors, { HttpCode, Message } from "../libs/Error";
+// End 2
 
 const storeController: T = {};
 storeController.goHome = (req: Request, res: Response) => {
@@ -43,7 +45,9 @@ storeController.processLogin = async (req: AdminRequest, res: Response) => {
 
     req.session.member = result;
     req.session.save(function () {
-      res.redirect("/admin");
+      // Start 2
+      res.redirect("/admin/book/all"); // login'dan keyin to'g'ridan-to'g'ri kontent-sahifasiga
+      // End 2
     });
   } catch (err) {
     console.log("Error, processLogin:", err);
@@ -55,14 +59,24 @@ storeController.processSignup = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processSignup");
     console.log("body", req.body);
+    // Start 2
+    const file = req.file;
+    if (!file) throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG); // rasm yuklanmagan bo'lsa signup rad etiladi
+    // End 2
+
     const newMember: MemberInput = req.body;
+    // Start 2
+    newMember.memberImage = file?.path; // multer saqlagan fayl yo'li
+    // End 2
     newMember.memberType = MemberType.STORE;
     const memberService = new MemberService();
     const result = await memberService.processSignup(newMember);
 
     req.session.member = result;
     req.session.save(function () {
-      res.redirect("/admin");
+      // Start 2
+      res.redirect("/admin/book/all");
+      // End 2
     });
   } catch (err) {
     console.log("Error, processSignup:", err);

@@ -1,4 +1,3 @@
-// Start 3
 import BookModel from "../schema/Book.model";
 
 class BookService {
@@ -10,4 +9,3 @@ class BookService {
 }
 
 export default BookService;
-// End 3

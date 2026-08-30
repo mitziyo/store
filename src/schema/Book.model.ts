@@ -1,4 +1,3 @@
-// Start 2
 import mongoose, { Schema } from "mongoose";
 import { BookFormat, BookGenre, BookStatus } from "../libs/enums/book.enum";
 
@@ -58,4 +57,3 @@ const bookSchema = new Schema(
 bookSchema.index({ bookName: 1, bookFormat: 1 }, { unique: true }); // productVolume yo'q, shuning uchun indexdan ham chiqarib tashlandi
 
 export default mongoose.model("Book", bookSchema);
-// End 2

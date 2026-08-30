@@ -1,4 +1,3 @@
-// Start 1
 export enum BookFormat {
   PAPERBACK = "PAPERBACK",
   HARDCOVER = "HARDCOVER",
@@ -18,4 +17,3 @@ export enum BookGenre {
   CHILDREN = "CHILDREN",
   OTHER = "OTHER",
 }
-// End 1
