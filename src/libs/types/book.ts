@@ -25,3 +25,18 @@ export interface BookInput {
   bookImages?: string[];
   bookViews?: number;
 }
+
+// Start 2
+export interface BookUpdateInput {
+  _id: mongoose.Types.ObjectId;
+  bookStatus?: BookStatus;
+  bookGenre?: BookGenre;
+  bookName?: string;
+  bookPrice?: number;
+  bookLeftCount?: number;
+  bookFormat?: BookFormat;
+  bookDesc?: string;
+  bookImages?: string[];
+  bookViews?: number;
+}
+// End 2
