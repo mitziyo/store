@@ -11,10 +11,8 @@ const bookController: T = {};
 bookController.getAllBooks = async (req: Request, res: Response) => {
   try {
     console.log("getAllBooks");
-    // Start 2
     const data = await bookService.getAllBooks();
     res.render("books", { books: data });
-    // End 2
   } catch (err) {
     console.log("Error, getAllBooks:", err);
     if (err instanceof Errors) res.status(err.code).json(err);

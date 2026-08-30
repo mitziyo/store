@@ -36,6 +36,9 @@ routerAdmin.post(
   bookController.updatedChosenBook,
 );
 
+// Start 3
 /** User */
+routerAdmin.get("/user/all", storeController.verifyStore, storeController.getUsers);
+// End 3
 
 export default routerAdmin;

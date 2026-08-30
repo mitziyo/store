@@ -44,6 +44,15 @@ class MemberService {
       .findById(member._id)
       .exec()) as unknown as Member;
   }
+
+  // Start 2
+  public async getUsers(): Promise<Member[]> {
+    const result = await this.memberModel
+      .find({ memberType: MemberType.USER })
+      .exec();
+    return result as unknown as Member[]; // bo'sh ro'yxat ham to'g'ri holat, xato emas — shuning uchun bo'sh-tekshiruv yo'q
+  }
+  // End 2
 }
 
 export default MemberService;

@@ -10,12 +10,10 @@ class BookService {
     this.bookModel = BookModel;
   }
 
-  // Start 1
   public async getAllBooks(): Promise<Book[]> {
     const result = await this.bookModel.find().exec();
     return result as unknown as Book[]; // bo'sh ro'yxat ham to'g'ri holat, xato emas — shuning uchun bo'sh-tekshiruv yo'q
   }
-  // End 1
 
   public async createNewBook(input: BookInput): Promise<Book> {
     try {

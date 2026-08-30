@@ -1,0 +1,14 @@
+<!-- Start 4 -->
+<%- include('includes/header') %>
+
+<body>
+  <div>USERS PAGE</div>
+  <div><%= member.memberNick %></div>
+
+  <% users.map((value, key) => { %>
+    <p><%= value.memberNick %> - <%= value.memberPhone %> - <%= value.memberStatus %></p>
+  <% }) %>
+</body>
+
+<%- include('includes/footer') %>
+<!-- End 4 -->

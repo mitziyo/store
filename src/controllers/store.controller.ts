@@ -105,6 +105,28 @@ storeController.logout = async (req: AdminRequest, res: Response) => {
   }
 };
 
+// Start 1
+storeController.getUsers = async (req: Request, res: Response) => {
+  try {
+    console.log("getUsers");
+    const memberService = new MemberService();
+    const result = await memberService.getUsers();
+    res.render("users", { users: result });
+  } catch (err) {
+    console.log("Error, getUsers:", err);
+    res.redirect("/admin/login");
+  }
+};
+
+storeController.updateChosenUser = (req: Request, res: Response) => {
+  try {
+    console.log("updateChosenUser");
+  } catch (err) {
+    console.log("Error, updateChosenUser:", err);
+  }
+};
+// End 1
+
 storeController.verifyStore = (req: AdminRequest, res: Response, next: NextFunction) => {
   if (req.session?.member?.memberType === MemberType.STORE) {
     req.member = req.session.member; // controller ichida req.member orqali qulay foydalanish uchun
