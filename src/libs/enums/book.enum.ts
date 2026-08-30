@@ -1,0 +1,21 @@
+// Start 1
+export enum BookFormat {
+  PAPERBACK = "PAPERBACK",
+  HARDCOVER = "HARDCOVER",
+  EBOOK = "EBOOK",
+}
+
+export enum BookStatus {
+  PAUSE = "PAUSE",
+  PROCESS = "PROCESS",
+  DELETE = "DELETE",
+}
+
+export enum BookGenre {
+  FICTION = "FICTION",
+  NON_FICTION = "NON_FICTION",
+  SCIENCE = "SCIENCE",
+  CHILDREN = "CHILDREN",
+  OTHER = "OTHER",
+}
+// End 1

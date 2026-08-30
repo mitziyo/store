@@ -1,4 +1,3 @@
-// Start 1
 import fs from "fs";
 import path from "path";
 import multer from "multer";
@@ -25,4 +24,3 @@ const makeUploader = (address: string) => {
 };
 
 export default makeUploader;
-// End 1
