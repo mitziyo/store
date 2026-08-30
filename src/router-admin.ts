@@ -10,25 +10,31 @@ routerAdmin
   .get("/login", storeController.getLogin)
   .post("/login", storeController.processLogin);
 
-routerAdmin
-  .get("/signup", storeController.getSignup)
-  .post(
-    "/signup",
-    makeUploader("members").single("memberImage"), // formadagi memberImage faylini ./uploads/members'ga saqlaydi
-    storeController.processSignup,
-  );
+routerAdmin.get("/signup", storeController.getSignup).post(
+  "/signup",
+  makeUploader("members").single("memberImage"), // formadagi memberImage faylini ./uploads/members'ga saqlaydi
+  storeController.processSignup,
+);
 
 routerAdmin.get("/check-me", storeController.checkAuthSession); // joriy session'da qaysi member login qilganini tekshirish
 routerAdmin.get("/logout", storeController.logout); // session'ni tugatish
 
-routerAdmin.get("/book/all", storeController.verifyStore, bookController.getAllBooks);
+routerAdmin.get(
+  "/book/all",
+  storeController.verifyStore,
+  bookController.getAllBooks,
+);
 routerAdmin.post(
   "/book/create",
   storeController.verifyStore,
   makeUploader("books").array("bookImages", 5), // 5 tagacha rasmni ./uploads/books'ga saqlaydi
   bookController.createNewBook,
 );
-routerAdmin.post("/book/:id", storeController.verifyStore, bookController.updatedChosenBook);
+routerAdmin.post(
+  "/book/:id",
+  storeController.verifyStore,
+  bookController.updatedChosenBook,
+);
 
 /** User */
 

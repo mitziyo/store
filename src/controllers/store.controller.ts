@@ -3,9 +3,7 @@ import { T } from "../libs/types/common";
 import MemberService from "../models/Member.service";
 import { MemberInput, LoginInput, AdminRequest } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
-// Start 2
 import Errors, { HttpCode, Message } from "../libs/Error";
-// End 2
 
 const storeController: T = {};
 storeController.goHome = (req: Request, res: Response) => {
@@ -45,13 +43,17 @@ storeController.processLogin = async (req: AdminRequest, res: Response) => {
 
     req.session.member = result;
     req.session.save(function () {
-      // Start 2
       res.redirect("/admin/book/all"); // login'dan keyin to'g'ridan-to'g'ri kontent-sahifasiga
-      // End 2
     });
   } catch (err) {
+    // Start 6
     console.log("Error, processLogin:", err);
-    res.send(err);
+    const message =
+      err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
+    res.send(
+      `<script> alert("${message}"); window.location.replace('/admin/login') </script>`,
+    );
+    // End 6
   }
 };
 
@@ -59,28 +61,30 @@ storeController.processSignup = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processSignup");
     console.log("body", req.body);
-    // Start 2
     const file = req.file;
     if (!file) throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG); // rasm yuklanmagan bo'lsa signup rad etiladi
-    // End 2
 
     const newMember: MemberInput = req.body;
-    // Start 2
-    newMember.memberImage = file?.path; // multer saqlagan fayl yo'li
-    // End 2
+    // Start 6
+    newMember.memberImage = file?.path.replace(/\\/g, "/"); // Windows'da multer "\" bilan qaytaradi, URL uchun "/" kerak
+    // End 6
     newMember.memberType = MemberType.STORE;
     const memberService = new MemberService();
     const result = await memberService.processSignup(newMember);
 
     req.session.member = result;
     req.session.save(function () {
-      // Start 2
       res.redirect("/admin/book/all");
-      // End 2
     });
   } catch (err) {
+    // Start 6
     console.log("Error, processSignup:", err);
-    res.send(err);
+    const message =
+      err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
+    res.send(
+      `<script> alert("${message}"); window.location.replace('/admin/signup') </script>`,
+    );
+    // End 6
   }
 };
 
