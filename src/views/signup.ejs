@@ -13,7 +13,7 @@
       <div class="auth-topbar-links">
         <a class="auth-topbar-link" href="/admin">Home</a>
         <a class="auth-topbar-link" href="/admin/login">Login</a>
-        <a class="auth-topbar-link" href="/admin/signup">Signup</a>
+        <a class="auth-topbar-link active" href="/admin/signup">Signup</a>
       </div>
     </div>
 
@@ -24,6 +24,12 @@
       method="POST"
       enctype="multipart/form-data"
     >
+      <label for="input-file" class="avatar-upload">
+        <img class="avatar-upload__img" src="/img/default.jpg" alt="Store logo" />
+        <span class="avatar-upload__icon"><i class="fa-solid fa-camera"></i></span>
+      </label>
+      <input type="file" id="input-file" class="upload-hidden member-image" name="memberImage" />
+
       <h1>Create your store</h1>
       <p class="auth-subtitle">Sign up to manage LightBooks</p>
 
@@ -45,23 +51,6 @@
         <div class="auth-field">
           <label>Repeat password *</label>
           <input type="password" name="confirmPassword" class="confirm-password" placeholder="Repeat password" value="" autocomplete="off" />
-        </div>
-      </div>
-
-      <div class="auth-upload-row">
-        <img class="upload-img-frame" src="/img/default.jpg" />
-        <div class="auth-upload-info">
-          <span class="auth-upload-title">Store image</span>
-          <div class="file-box">
-            <input class="upload-name" value="Choose image" disabled="disabled" />
-            <label for="input-file" class="file-input-label">Upload Image</label>
-            <input
-              type="file"
-              id="input-file"
-              class="upload-hidden member-image"
-              name="memberImage"
-            />
-          </div>
         </div>
       </div>
 

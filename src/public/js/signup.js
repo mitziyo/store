@@ -1,8 +1,7 @@
 console.log("Signup frontend javascript file");
 
 $(function () {
-  const fileTarget = $(".file-box .upload-hidden");
-  let filename;
+  const fileTarget = $(".member-image");
 
   fileTarget.on("change", function () {
     if (window.FileReader) {
@@ -12,15 +11,9 @@ $(function () {
 
       if (!validImageType.includes(fileType)) {
         alert("Please insert only jpeg, jpg and png!");
-      } else {
-        if (uploadFile) {
-          $(".upload-img-frame").attr("src", URL.createObjectURL(uploadFile));
-        }
-
-        filename = $(this)[0].files[0].name;
+      } else if (uploadFile) {
+        $(".avatar-upload__img").attr("src", URL.createObjectURL(uploadFile));
       }
-
-      $(this).siblings(".upload-name").val(filename);
     }
   });
 });
