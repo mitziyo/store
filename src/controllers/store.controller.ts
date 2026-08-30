@@ -93,7 +93,6 @@ storeController.logout = async (req: AdminRequest, res: Response) => {
   }
 };
 
-// Start 1
 storeController.verifyStore = (req: AdminRequest, res: Response, next: NextFunction) => {
   if (req.session?.member?.memberType === MemberType.STORE) {
     req.member = req.session.member; // controller ichida req.member orqali qulay foydalanish uchun
@@ -102,6 +101,5 @@ storeController.verifyStore = (req: AdminRequest, res: Response, next: NextFunct
     res.redirect("/admin/login"); // ruxsatsiz kirishga urinilsa, login sahifasiga qaytaradi
   }
 };
-// End 1
 
 export default storeController;

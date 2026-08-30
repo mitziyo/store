@@ -25,12 +25,10 @@ class Errors extends Error {
   public code: HttpCode;
   public message: Message;
 
-  // Start 1
   static standard = {
     code: HttpCode.INTERNAL_SERVER_ERROR, // controller qaysi aniq xato ekanini bilmasa, shu standart kod ishlatiladi
     message: Message.SOMETHING_WENT_WRONG,
   };
-  // End 1
 
   constructor(statusCode: HttpCode, statusMessage: Message) {
     super();

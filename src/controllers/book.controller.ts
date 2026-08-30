@@ -1,4 +1,3 @@
-// Start 4
 import { Request, Response } from "express";
 import Errors from "../libs/Error";
 import { T } from "../libs/types/common";
@@ -39,4 +38,3 @@ bookController.updatedChosenBook = async (req: Request, res: Response) => {
 };
 
 export default bookController;
-// End 4

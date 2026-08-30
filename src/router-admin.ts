@@ -2,6 +2,9 @@ import express from "express";
 const routerAdmin = express.Router();
 import storeController from "./controllers/store.controller";
 import bookController from "./controllers/book.controller";
+// Start 2
+import makeUploader from "./libs/utils/uploader";
+// End 2
 
 /** Store */
 routerAdmin.get("/", storeController.goHome);
@@ -11,15 +14,26 @@ routerAdmin
 
 routerAdmin
   .get("/signup", storeController.getSignup)
-  .post("/signup", storeController.processSignup);
+  // Start 2
+  .post(
+    "/signup",
+    makeUploader("members").single("memberImage"), // formadagi memberImage faylini ./uploads/members'ga saqlaydi
+    storeController.processSignup,
+  );
+// End 2
 
 routerAdmin.get("/check-me", storeController.checkAuthSession); // joriy session'da qaysi member login qilganini tekshirish
 routerAdmin.get("/logout", storeController.logout); // session'ni tugatish
 
-// Start 2
 routerAdmin.get("/book/all", storeController.verifyStore, bookController.getAllBooks);
-routerAdmin.get("/book/create", storeController.verifyStore, bookController.createNewBook); // hozircha GET — Step 24'da multer bilan POST'ga o'tkaziladi
-routerAdmin.get("/book/:id", storeController.verifyStore, bookController.updatedChosenBook); // hozircha GET — Step 24'da POST'ga o'tkaziladi
+// Start 2
+routerAdmin.post(
+  "/book/create",
+  storeController.verifyStore,
+  makeUploader("books").array("bookImages", 5), // 5 tagacha rasmni ./uploads/books'ga saqlaydi
+  bookController.createNewBook,
+);
+routerAdmin.post("/book/:id", storeController.verifyStore, bookController.updatedChosenBook);
 // End 2
 
 /** User */
