@@ -22,19 +22,19 @@ app.use(morgan(MORGAN_FORMAT));
 /** 2 - SESSION **/
 app.use(
   session({
-    secret: String(process.env.SESSION_SECRET),
+    secret: String(process.env.SESSION_SECRET), // cookie imzosini shifrlash uchun kalit
     cookie: {
-      maxAge: 1000 * 3600 * 3,
-    },
-    store: store,
-    resave: true,
-    saveUninitialized: true,
+      maxAge: 1000 * 3600 * 3,      // bu session id ni
+    },                              // cookiesga yozish uchun ishlatiladi
+    store: store,                   // sessionni xotira o'rniga MongoDB'da saqlaydi
+    resave: true,                   // o'zgarmagan sessionni ham har so'rovda qayta saqlaydi
+    saveUninitialized: true,        // hali bo'sh (init qilinmagan) sessionni ham darhol saqlaydi
   }),
 );
 
 app.use(function (req, res, next) {
-  const sessionInstance = req.session as T;
-  res.locals.member = sessionInstance.member;
+  const sessionInstance = req.session as T; // req.session'ni kengaytirilgan turga o'tkazish
+  res.locals.member = sessionInstance.member; // EJS view'lar member'ni to'g'ridan-to'g'ri o'qiy olishi uchun
   next();
 });
 /** 3 - VIEWS **/

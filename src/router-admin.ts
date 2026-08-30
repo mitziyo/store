@@ -12,6 +12,10 @@ routerAdmin
   .get("/signup", storeController.getSignup)
   .post("/signup", storeController.processSignup);
 
+// Start 3
+routerAdmin.get("/check-me", storeController.checkAuthSession); // joriy session'da qaysi member login qilganini tekshirish
+// End 3
+
 /** Book */
 /** User */
 
