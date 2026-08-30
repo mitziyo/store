@@ -3,9 +3,7 @@ import { T } from "../libs/types/common";
 import MemberService from "../models/Member.service";
 import { MemberInput, LoginInput, AdminRequest } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
-// Start 2
 import { Message } from "../libs/Error"; // NOT_AUTHENTICATED xabari uchun
-// End 2
 
 const storeController: T = {};
 storeController.goHome = (req: Request, res: Response) => {
@@ -72,7 +70,6 @@ storeController.processSignup = async (req: AdminRequest, res: Response) => {
   }
 };
 
-// Start 2
 storeController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   try {
     console.log("checkAuthSession");
@@ -83,6 +80,19 @@ storeController.checkAuthSession = async (req: AdminRequest, res: Response) => {
     res.send(err);
   }
 };
-// End 2
+
+// Start 1
+storeController.logout = async (req: AdminRequest, res: Response) => {
+  try {
+    console.log("logout");
+    req.session.destroy(function () {
+      res.redirect("/admin"); // session butunlay o'chirilgach, home'ga qaytaradi
+    });
+  } catch (err) {
+    console.log("Error, logout:", err);
+    res.redirect("/admin"); // xato bo'lsa ham foydalanuvchini osilib qolishiga yo'l qo'ymaydi
+  }
+};
+// End 1
 
 export default storeController;
