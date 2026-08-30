@@ -1,4 +1,3 @@
-// Start 3
 import Errors, { HttpCode, Message } from "../libs/Error";
 import { Book, BookInput } from "../libs/types/book";
 import BookModel from "../schema/Book.model";
@@ -22,5 +21,4 @@ class BookService {
 }
 
 export default BookService;
-// End 3
 

@@ -46,14 +46,12 @@ storeController.processLogin = async (req: AdminRequest, res: Response) => {
       res.redirect("/admin/book/all"); // login'dan keyin to'g'ridan-to'g'ri kontent-sahifasiga
     });
   } catch (err) {
-    // Start 6
     console.log("Error, processLogin:", err);
     const message =
       err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
     res.send(
       `<script> alert("${message}"); window.location.replace('/admin/login') </script>`,
     );
-    // End 6
   }
 };
 
@@ -65,9 +63,7 @@ storeController.processSignup = async (req: AdminRequest, res: Response) => {
     if (!file) throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG); // rasm yuklanmagan bo'lsa signup rad etiladi
 
     const newMember: MemberInput = req.body;
-    // Start 6
     newMember.memberImage = file?.path.replace(/\\/g, "/"); // Windows'da multer "\" bilan qaytaradi, URL uchun "/" kerak
-    // End 6
     newMember.memberType = MemberType.STORE;
     const memberService = new MemberService();
     const result = await memberService.processSignup(newMember);
@@ -77,14 +73,12 @@ storeController.processSignup = async (req: AdminRequest, res: Response) => {
       res.redirect("/admin/book/all");
     });
   } catch (err) {
-    // Start 6
     console.log("Error, processSignup:", err);
     const message =
       err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
     res.send(
       `<script> alert("${message}"); window.location.replace('/admin/signup') </script>`,
     );
-    // End 6
   }
 };
 

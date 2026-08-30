@@ -36,11 +36,9 @@ const bookSchema = new Schema(
       default: BookFormat.PAPERBACK,
     },
 
-    // Start 5
     bookDesc: {
       type: String, // BookInput'da ixtiyoriy (?) deb belgilangan, shuning uchun bu yerda ham required emas
     },
-    // End 5
 
     bookImages: {
       type: [String], // massiv bo'lgani uchun nomi ko'plikda (burak'da "productImage" birlikda edi — xato)

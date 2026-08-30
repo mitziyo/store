@@ -35,11 +35,9 @@ export interface LoginInput {
   memberPassword: string;
 }
 
-// Start 2
 export interface AdminRequest extends Request {
   member: Member;
   session: Session & { member: Member };
   file?: Express.Multer.File; // multer bitta faylni shu yerga qo'yadi (masalan memberImage)
   files?: Express.Multer.File[]; // multer bir nechta faylni shu yerga qo'yadi (masalan bookImages)
 }
-// End 2

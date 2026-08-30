@@ -2,10 +2,8 @@ import { Request, Response } from "express";
 import Errors, { HttpCode, Message } from "../libs/Error";
 import { T } from "../libs/types/common";
 import BookService from "../models/Book.service";
-// Start 4
 import { BookInput } from "../libs/types/book";
 import { AdminRequest } from "../libs/types/member";
-// End 4
 
 const bookService = new BookService();
 
@@ -21,7 +19,6 @@ bookController.getAllBooks = async (req: Request, res: Response) => {
   }
 };
 
-// Start 4
 bookController.createNewBook = async (req: AdminRequest, res: Response) => {
   try {
     console.log("createNewBook");
@@ -44,7 +41,6 @@ bookController.createNewBook = async (req: AdminRequest, res: Response) => {
     );
   }
 };
-// End 4
 
 bookController.updatedChosenBook = async (req: Request, res: Response) => {
   try {
