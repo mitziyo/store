@@ -1,7 +1,10 @@
 import { MemberType } from "../libs/enums/member.enum";
 import Errors, { HttpCode, Message } from "../libs/Error";
-import { MemberInput, Member, LoginInput } from "../libs/types/member";
+import { MemberInput, Member, LoginInput, MemberUpdateInput } from "../libs/types/member";
 import MemberModel from "../schema/Member.model";
+// Start 2
+import { shapeIntoMongooseObjectId } from "../libs/config";
+// End 2
 
 class MemberService {
   private readonly memberModel;
@@ -45,12 +48,21 @@ class MemberService {
       .exec()) as unknown as Member;
   }
 
-  // Start 2
   public async getUsers(): Promise<Member[]> {
     const result = await this.memberModel
       .find({ memberType: MemberType.USER })
       .exec();
     return result as unknown as Member[]; // bo'sh ro'yxat ham to'g'ri holat, xato emas — shuning uchun bo'sh-tekshiruv yo'q
+  }
+
+  // Start 2
+  public async updateChosenUser(input: MemberUpdateInput): Promise<Member> {
+    const objectId = shapeIntoMongooseObjectId(input._id);
+    const result = await this.memberModel
+      .findOneAndUpdate({ _id: objectId }, input, { returnDocument: "after" }) // burak'da findByIdAndUpdate'ga obyekt berilgan edi — xato, hech qanday hujjatga mos kelmasdi
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    return result as unknown as Member;
   }
   // End 2
 }

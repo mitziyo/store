@@ -105,7 +105,6 @@ storeController.logout = async (req: AdminRequest, res: Response) => {
   }
 };
 
-// Start 1
 storeController.getUsers = async (req: Request, res: Response) => {
   try {
     console.log("getUsers");
@@ -118,14 +117,22 @@ storeController.getUsers = async (req: Request, res: Response) => {
   }
 };
 
-storeController.updateChosenUser = (req: Request, res: Response) => {
+storeController.updateChosenUser = async (req: Request, res: Response) => {
   try {
     console.log("updateChosenUser");
+    // Start 3
+    const memberService = new MemberService();
+    const result = await memberService.updateChosenUser(req.body);
+    res.status(HttpCode.OK).json({ data: result });
+    // End 3
   } catch (err) {
     console.log("Error, updateChosenUser:", err);
+    // Start 3
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+    // End 3
   }
 };
-// End 1
 
 storeController.verifyStore = (req: AdminRequest, res: Response, next: NextFunction) => {
   if (req.session?.member?.memberType === MemberType.STORE) {
