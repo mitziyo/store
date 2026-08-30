@@ -26,7 +26,6 @@ export interface BookInput {
   bookViews?: number;
 }
 
-// Start 2
 export interface BookUpdateInput {
   _id: mongoose.Types.ObjectId;
   bookStatus?: BookStatus;
@@ -39,4 +38,3 @@ export interface BookUpdateInput {
   bookImages?: string[];
   bookViews?: number;
 }
-// End 2

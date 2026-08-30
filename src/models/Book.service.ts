@@ -1,9 +1,7 @@
 import Errors, { HttpCode, Message } from "../libs/Error";
 import { Book, BookInput, BookUpdateInput } from "../libs/types/book";
 import BookModel from "../schema/Book.model";
-// Start 3
 import { shapeIntoMongooseObjectId } from "../libs/config";
-// End 3
 
 class BookService {
   private readonly bookModel;
@@ -11,6 +9,13 @@ class BookService {
   constructor() {
     this.bookModel = BookModel;
   }
+
+  // Start 1
+  public async getAllBooks(): Promise<Book[]> {
+    const result = await this.bookModel.find().exec();
+    return result as unknown as Book[]; // bo'sh ro'yxat ham to'g'ri holat, xato emas — shuning uchun bo'sh-tekshiruv yo'q
+  }
+  // End 1
 
   public async createNewBook(input: BookInput): Promise<Book> {
     try {
@@ -22,7 +27,6 @@ class BookService {
     }
   }
 
-  // Start 3
   public async updatedChosenBook(
     id: string,
     input: BookUpdateInput,
@@ -34,7 +38,6 @@ class BookService {
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     return result as unknown as Book;
   }
-  // End 3
 }
 
 export default BookService;

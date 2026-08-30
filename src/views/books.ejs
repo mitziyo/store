@@ -1,0 +1,14 @@
+<!-- Start 3 -->
+<%- include('includes/header') %>
+
+<body>
+  <div>BOOKS PAGE</div>
+  <div><%= member.memberNick %></div>
+
+  <% books.map((value, key) => { %>
+    <p><%= value.bookName %> - <%= value.bookFormat %></p>
+  <% }) %>
+</body>
+
+<%- include('includes/footer') %>
+<!-- End 3 -->
