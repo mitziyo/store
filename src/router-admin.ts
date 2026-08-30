@@ -16,11 +16,11 @@ routerAdmin
 routerAdmin.get("/check-me", storeController.checkAuthSession); // joriy session'da qaysi member login qilganini tekshirish
 routerAdmin.get("/logout", storeController.logout); // session'ni tugatish
 
-// Start 5
-routerAdmin.get("/book/all", bookController.getAllBooks);
-routerAdmin.get("/book/create", bookController.createNewBook); // hozircha GET — Step 24'da multer bilan POST'ga o'tkaziladi
-routerAdmin.get("/book/:id", bookController.updatedChosenBook); // hozircha GET — Step 24'da POST'ga o'tkaziladi
-// End 5
+// Start 2
+routerAdmin.get("/book/all", storeController.verifyStore, bookController.getAllBooks);
+routerAdmin.get("/book/create", storeController.verifyStore, bookController.createNewBook); // hozircha GET — Step 24'da multer bilan POST'ga o'tkaziladi
+routerAdmin.get("/book/:id", storeController.verifyStore, bookController.updatedChosenBook); // hozircha GET — Step 24'da POST'ga o'tkaziladi
+// End 2
 
 /** User */
 

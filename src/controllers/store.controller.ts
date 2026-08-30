@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { T } from "../libs/types/common";
 import MemberService from "../models/Member.service";
 import { MemberInput, LoginInput, AdminRequest } from "../libs/types/member";
@@ -81,7 +81,6 @@ storeController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   }
 };
 
-// Start 1
 storeController.logout = async (req: AdminRequest, res: Response) => {
   try {
     console.log("logout");
@@ -91,6 +90,16 @@ storeController.logout = async (req: AdminRequest, res: Response) => {
   } catch (err) {
     console.log("Error, logout:", err);
     res.redirect("/admin"); // xato bo'lsa ham foydalanuvchini osilib qolishiga yo'l qo'ymaydi
+  }
+};
+
+// Start 1
+storeController.verifyStore = (req: AdminRequest, res: Response, next: NextFunction) => {
+  if (req.session?.member?.memberType === MemberType.STORE) {
+    req.member = req.session.member; // controller ichida req.member orqali qulay foydalanish uchun
+    next();
+  } else {
+    res.redirect("/admin/login"); // ruxsatsiz kirishga urinilsa, login sahifasiga qaytaradi
   }
 };
 // End 1
