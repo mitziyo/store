@@ -1,6 +1,7 @@
 import express from "express";
 const routerAdmin = express.Router();
 import storeController from "./controllers/store.controller";
+import bookController from "./controllers/book.controller";
 
 /** Store */
 routerAdmin.get("/", storeController.goHome);
@@ -13,12 +14,14 @@ routerAdmin
   .post("/signup", storeController.processSignup);
 
 routerAdmin.get("/check-me", storeController.checkAuthSession); // joriy session'da qaysi member login qilganini tekshirish
-
-// Start 2
 routerAdmin.get("/logout", storeController.logout); // session'ni tugatish
-// End 2
 
-/** Book */
+// Start 5
+routerAdmin.get("/book/all", bookController.getAllBooks);
+routerAdmin.get("/book/create", bookController.createNewBook); // hozircha GET — Step 24'da multer bilan POST'ga o'tkaziladi
+routerAdmin.get("/book/:id", bookController.updatedChosenBook); // hozircha GET — Step 24'da POST'ga o'tkaziladi
+// End 5
+
 /** User */
 
 export default routerAdmin;

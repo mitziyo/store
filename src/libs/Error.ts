@@ -18,14 +18,19 @@ export enum Message {
   USED_NICK_PHONE = "You are inserting already used nick or phone!",
   NO_MEMBER_NICK = "No member with that member nick!",
   WRONG_PASSWORD = "Wrong password entered, please try agarin!",
-  // Start 1 — checkAuthSession uchun: session'da member topilmasa shu xabar qaytadi
-  NOT_AUTHENTICATED = "You are not authenticated, Please login first!",
-  // End 1
+  NOT_AUTHENTICATED = "You are not authenticated, Please login first!", // checkAuthSession uchun: session'da member topilmasa shu xabar qaytadi
 }
 
 class Errors extends Error {
   public code: HttpCode;
   public message: Message;
+
+  // Start 1
+  static standard = {
+    code: HttpCode.INTERNAL_SERVER_ERROR, // controller qaysi aniq xato ekanini bilmasa, shu standart kod ishlatiladi
+    message: Message.SOMETHING_WENT_WRONG,
+  };
+  // End 1
 
   constructor(statusCode: HttpCode, statusMessage: Message) {
     super();
