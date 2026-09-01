@@ -38,8 +38,6 @@ routerAdmin.post(
 
 /** User */
 routerAdmin.get("/user/all", storeController.verifyStore, storeController.getUsers);
-// Start 4
 routerAdmin.post("/user/edit", storeController.verifyStore, storeController.updateChosenUser);
-// End 4
 
 export default routerAdmin;

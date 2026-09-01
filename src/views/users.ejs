@@ -1,12 +1,61 @@
 <%- include('includes/header') %>
 
-<body>
-  <div>USERS PAGE</div>
-  <div><%= member.memberNick %></div>
+<link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
 
-  <% users.map((value, key) => { %>
-    <p><%= value.memberNick %> - <%= value.memberPhone %> - <%= value.memberStatus %></p>
-  <% }) %>
+<body>
+  <div class="dash-layout">
+    <%- include('includes/sidebar', { active: 'users' }) %>
+
+    <div class="dash-main">
+      <%- include('includes/topbar') %>
+
+      <div class="dash-content">
+        <div class="dash-content-header">
+          <h1>Users</h1>
+        </div>
+
+        <div class="dash-table-card">
+          <% if (users.length) { %>
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Phone</th>
+                <th>Points</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach((u) => { %>
+              <tr>
+                <td>
+                  <div class="dash-row-media">
+                    <img class="dash-row-thumb round" src="/<%= u.memberImage || 'img/default.jpg' %>" alt="<%= u.memberNick %>" />
+                    <%= u.memberNick %>
+                  </div>
+                </td>
+                <td><%= u.memberPhone %></td>
+                <td><%= u.memberPoints %></td>
+                <td>
+                  <span class="dash-badge <%= u.memberStatus === 'ACTIVE' ? 'active' : 'blocked' %>"><%= u.memberStatus %></span>
+                </td>
+                <td>
+                  <div class="dash-row-actions">
+                    <button title="Edit"><i class="fa-solid fa-pen"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+          <% } else { %>
+          <div class="dash-empty">No users yet.</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 <%- include('includes/footer') %>

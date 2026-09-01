@@ -1,12 +1,67 @@
 <%- include('includes/header') %>
 
-<body>
-  <div>BOOKS PAGE</div>
-  <div><%= member.memberNick %></div>
+<link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
 
-  <% books.map((value, key) => { %>
-    <p><%= value.bookName %> - <%= value.bookFormat %></p>
-  <% }) %>
+<body>
+  <div class="dash-layout">
+    <%- include('includes/sidebar', { active: 'books' }) %>
+
+    <div class="dash-main">
+      <%- include('includes/topbar') %>
+
+      <div class="dash-content">
+        <div class="dash-content-header">
+          <h1>Books</h1>
+          <a class="dash-btn-primary" href="#"><i class="fa-solid fa-plus"></i> Add New Book</a>
+        </div>
+
+        <div class="dash-table-card">
+          <% if (books.length) { %>
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>Genre</th>
+                <th>Format</th>
+                <th>Price</th>
+                <th>Left</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% books.forEach((book) => { %>
+              <tr>
+                <td>
+                  <div class="dash-row-media">
+                    <img class="dash-row-thumb" src="/<%= book.bookImages[0] || 'img/default.jpg' %>" alt="<%= book.bookName %>" />
+                    <%= book.bookName %>
+                  </div>
+                </td>
+                <td><%= book.bookGenre %></td>
+                <td><%= book.bookFormat %></td>
+                <td>$<%= book.bookPrice %></td>
+                <td><%= book.bookLeftCount %></td>
+                <td>
+                  <span class="dash-badge <%= book.bookStatus === 'PROCESS' ? 'process' : 'pause' %>"><%= book.bookStatus %></span>
+                </td>
+                <td>
+                  <div class="dash-row-actions">
+                    <button title="Edit"><i class="fa-solid fa-pen"></i></button>
+                    <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+          <% } else { %>
+          <div class="dash-empty">No books yet — add your first book to get started.</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 <%- include('includes/footer') %>

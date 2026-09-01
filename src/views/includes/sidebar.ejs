@@ -1,0 +1,21 @@
+<div class="dash-sidebar">
+  <a class="dash-logo" href="/admin">
+    <span class="dash-logo-mark">LB</span>
+    LightBooks
+  </a>
+
+  <nav class="dash-nav">
+    <a class="dash-nav-item <%= active === 'home' ? 'active' : '' %>" href="/admin">
+      <i class="fa-solid fa-house"></i> Home
+    </a>
+    <a class="dash-nav-item <%= active === 'books' ? 'active' : '' %>" href="/admin/book/all">
+      <i class="fa-solid fa-book"></i> Books
+    </a>
+    <a class="dash-nav-item <%= active === 'users' ? 'active' : '' %>" href="/admin/user/all">
+      <i class="fa-solid fa-users"></i> Users
+    </a>
+    <a class="dash-nav-item" href="/admin/logout" onclick="return confirm('Do you want to logout?')">
+      <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </a>
+  </nav>
+</div>

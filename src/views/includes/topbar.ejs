@@ -1,0 +1,18 @@
+<div class="dash-topbar">
+  <div class="dash-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search..." />
+  </div>
+
+  <div class="dash-topbar-right">
+    <button class="dash-icon-btn"><i class="fa-solid fa-bell"></i></button>
+    <div class="dash-profile">
+      <img class="dash-profile-img" src="/<%= member.memberImage || 'img/default.jpg' %>" alt="<%= member.memberNick %>" />
+      <div class="dash-profile-text">
+        <span class="dash-profile-name"><%= member.memberNick %></span>
+        <span class="dash-profile-role">Store Admin</span>
+      </div>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+  </div>
+</div>

@@ -35,7 +35,6 @@ export interface LoginInput {
   memberPassword: string;
 }
 
-// Start 1
 export interface MemberUpdateInput {
   _id: mongoose.Types.ObjectId;
   memberStatus?: MemberStatus;
@@ -46,7 +45,6 @@ export interface MemberUpdateInput {
   memberDesc?: string;
   memberImage?: string;
 }
-// End 1
 
 export interface AdminRequest extends Request {
   member: Member;
