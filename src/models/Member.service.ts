@@ -66,6 +66,18 @@ class MemberService {
     return result as unknown as Member;
   }
 
+  public async getTopUsers(): Promise<Member[]> {
+    const result = await this.memberModel
+      .find({
+        memberStatus: MemberStatus.ACTIVE,
+        memberPoints: { $gte: 1 },
+      })
+      .sort({ memberPoints: -1 })
+      .limit(4)
+      .exec();
+    return result as unknown as Member[]; // bo'sh ro'yxat ham to'g'ri holat, xato emas
+  }
+
   /** SSR */
   public async processSignup(input: MemberInput): Promise<Member> {
     const exist = await this.memberModel
