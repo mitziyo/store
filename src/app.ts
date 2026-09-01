@@ -16,6 +16,7 @@ const store = MongoStore.create({
 /** 1 - ENTRANCE **/
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static("./uploads")); // signup/kitob rasmlari shu yerga saqlanadi, lekin public/ ichida emas edi
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan(MORGAN_FORMAT));
