@@ -1493,6 +1493,17 @@ values, saves changes).
 
 **ONLY PROCEED WHEN:** verified.
 
+**DONE, WITH A DEVIATION NOTED (2026-08-31):** implemented as `books.ejs`'s
+`.book-status-select` + `public/js/books.js` — logic (onchange → axios.post
+to Step 28's `/admin/book/:id` → check `result.data`) matches burak's
+`new-product-status` handler exactly, with one deliberate fix: burak blurs
+*every* status-select on the page (`$(".new-product-status").blur()`), we
+blur only the one just changed. **TODO, revisit later:** the colored
+pill styling (green/amber/red per status) on the select is our own
+addition — burak's own `products.css` has zero status-based styling
+(plain unstyled `<select>`). Left as our own visual choice for now;
+user asked to defer a final decision on it and move on.
+
 **NEXT STEP:** Step 38 — Users page real-data fix.
 
 ---
@@ -2169,6 +2180,34 @@ separately-analyzed sequence.
 - **Two-tier auth middleware**: `verifyAuth` (hard 401 gate) vs
   `retrieveAuth` (soft, never blocks) — pick per-route based on whether
   identity is required or merely optional.
+
+### Eslatmalar ro'yxati (LightBooks-ga xos, keyinroq hal qilinadi)
+- **Authors (mualliflar) katalogi** — `bstore-react`da to'liq `Author` turi bor
+  (bio, janrlar, statistika, ijtimoiy havolalar), lekin burak'da (restoran
+  loyihasi) hech qanday muqobili yo'q — o'zimiz loyihalashimiz kerak.
+  2026-08-31: hozircha `bookAuthor` (oddiy matn maydoni) ham qo'shilmadi —
+  butunlay keyinga qoldirildi, "Add New Book" formasi ham hozircha
+  Author'siz quriladi.
+- **Status-select rangi** (Step 37, `.book-status-select`) — yashil/sariq/
+  qizil pill-uslubi bizning o'z dizaynimiz, burak'ning o'zida bunday rang
+  yo'q (oddiy, bezaksiz select). Ranglarni qoldirish yoki burak'dagidek
+  oddiy qilish haqida yakuniy qaror hali berilmagan.
+- **Backend schema vs haqiqiy frontend (`bstore-react`) mos kelmasligi**
+  (2026-08-31, `src/lib/types/product.ts` bilan solishtirib topildi):
+  maydon nomlari (`bookName`→`title`, `bookPrice`→`price`,
+  `bookLeftCount`→`stockCount`, `bookDesc`→`description`,
+  `bookImages`→`images`, `bookGenre`(bitta)→`genres`(massiv)) va enum
+  qiymatlari (`BookStatus`: bizda PAUSE/PROCESS/DELETE, frontend'da faqat
+  ACTIVE/DELETE; `BookGenre`: bizda 5 ta, frontend'da 13 ta boshqa
+  ro'yxat; `BookFormat`: frontend'da AUDIOBOOK ham bor) mos emas. Qaror:
+  hozircha backend'ning soddalashtirilgan nomlarini **qoldiramiz**,
+  Step 42-58'da (SPA/API qatlami) javobni frontend kutgan shaklga
+  moslashtirib (map qilib) beramiz — hozir schema'ni qayta nomlashga
+  vaqt sarflamaymiz.
+- **Bitta kitob nomi (title) bir nechta formatda (eBook/Audiobook/
+  Hardcover) sotilishi — alohida yozuv sifatidami yoki bitta yozuv
+  ichida formatlar ro'yxati sifatidami?** — hali hal qilinmagan,
+  keyinga qoldirildi (2026-08-31).
 
 ### Known gaps / trade-offs in the original (flag, don't silently fix)
 - `accessToken` cookie is `httpOnly: false` (Step 43) — XSS-exposed by

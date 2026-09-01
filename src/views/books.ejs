@@ -12,7 +12,7 @@
       <div class="dash-content">
         <div class="dash-content-header">
           <h1>Books</h1>
-          <a class="dash-btn-primary" href="#"><i class="fa-solid fa-plus"></i> Add New Book</a>
+          <button class="dash-btn-primary" id="process-btn"><i class="fa-solid fa-plus"></i> Add New Book</button>
         </div>
 
         <div class="dash-table-card">
@@ -43,12 +43,15 @@
                 <td>$<%= book.bookPrice %></td>
                 <td><%= book.bookLeftCount %></td>
                 <td>
-                  <span class="dash-badge <%= book.bookStatus === 'PROCESS' ? 'process' : 'pause' %>"><%= book.bookStatus %></span>
+                  <select class="dash-status-select book-status-select <%= book.bookStatus === 'PROCESS' ? 'process' : 'pause' %>" id="<%= book._id %>">
+                    <option value="PAUSE" <%= book.bookStatus === 'PAUSE' ? 'selected' : '' %>>PAUSE</option>
+                    <option value="PROCESS" <%= book.bookStatus === 'PROCESS' ? 'selected' : '' %>>PROCESS</option>
+                    <option value="DELETE" <%= book.bookStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
+                  </select>
                 </td>
                 <td>
                   <div class="dash-row-actions">
                     <button title="Edit"><i class="fa-solid fa-pen"></i></button>
-                    <button title="Delete"><i class="fa-solid fa-trash"></i></button>
                   </div>
                 </td>
               </tr>
@@ -59,9 +62,105 @@
           <div class="dash-empty">No books yet — add your first book to get started.</div>
           <% } %>
         </div>
+
+        <form
+          onsubmit="return validateBookForm()"
+          action="/admin/book/create"
+          method="POST"
+          class="dash-form-card book-form-card"
+          enctype="multipart/form-data"
+        >
+          <h2>New Book Detail</h2>
+
+          <div class="dash-form-row">
+            <div class="dash-form-field">
+              <label>Book Name</label>
+              <input type="text" placeholder="Name" name="bookName" class="book-name" />
+            </div>
+          </div>
+
+          <div class="dash-form-row">
+            <div class="dash-form-field">
+              <label>Price</label>
+              <input type="number" placeholder="Price" name="bookPrice" class="book-price" />
+            </div>
+            <div class="dash-form-field">
+              <label>Left Count</label>
+              <input type="number" placeholder="Count" name="bookLeftCount" class="book-left-count" />
+            </div>
+          </div>
+
+          <div class="dash-form-row">
+            <div class="dash-form-field">
+              <label>Genre</label>
+              <select class="book-genre" name="bookGenre">
+                <option value="FICTION" selected>Fiction</option>
+                <option value="NON_FICTION">Non-Fiction</option>
+                <option value="SCIENCE">Science</option>
+                <option value="CHILDREN">Children</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="dash-form-field">
+              <label>Format</label>
+              <select class="book-format" name="bookFormat">
+                <option value="PAPERBACK" selected>Paperback</option>
+                <option value="HARDCOVER">Hardcover</option>
+                <option value="EBOOK">EBook</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="dash-form-row">
+            <div class="dash-form-field full">
+              <label>Description</label>
+              <textarea name="bookDesc" class="book-desc"></textarea>
+            </div>
+          </div>
+
+          <div class="dash-form-row">
+            <div class="dash-form-field full">
+              <label>Book Images</label>
+              <div class="dash-upload-frame">
+                <label class="dash-upload-box">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <img class="dash-upload-preview" id="book-image-1" />
+                  <input type="file" name="bookImages" class="book-image-1" onchange="previewBookImage(this, 1)" />
+                </label>
+                <label class="dash-upload-box">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <img class="dash-upload-preview" id="book-image-2" />
+                  <input type="file" name="bookImages" class="book-image-2" onchange="previewBookImage(this, 2)" />
+                </label>
+                <label class="dash-upload-box">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <img class="dash-upload-preview" id="book-image-3" />
+                  <input type="file" name="bookImages" class="book-image-3" onchange="previewBookImage(this, 3)" />
+                </label>
+                <label class="dash-upload-box">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <img class="dash-upload-preview" id="book-image-4" />
+                  <input type="file" name="bookImages" class="book-image-4" onchange="previewBookImage(this, 4)" />
+                </label>
+                <label class="dash-upload-box">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <img class="dash-upload-preview" id="book-image-5" />
+                  <input type="file" name="bookImages" class="book-image-5" onchange="previewBookImage(this, 5)" />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-form-actions">
+            <button type="button" class="dash-btn-secondary" id="cancel-btn">Cancel</button>
+            <button type="submit" class="dash-btn-primary" id="create-btn">Create</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+
+  <script type="text/javascript" src="/js/books.js"></script>
 </body>
 
 <%- include('includes/footer') %>
