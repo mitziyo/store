@@ -23,7 +23,6 @@
                 <th>Phone</th>
                 <th>Points</th>
                 <th>Status</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -38,12 +37,11 @@
                 <td><%= u.memberPhone %></td>
                 <td><%= u.memberPoints %></td>
                 <td>
-                  <span class="dash-badge <%= u.memberStatus === 'ACTIVE' ? 'active' : 'blocked' %>"><%= u.memberStatus %></span>
-                </td>
-                <td>
-                  <div class="dash-row-actions">
-                    <button title="Edit"><i class="fa-solid fa-pen"></i></button>
-                  </div>
+                  <select class="dash-status-select member-status-select <%= u.memberStatus === 'ACTIVE' ? 'process' : (u.memberStatus === 'BLOCK' ? 'pause' : 'delete') %>" id="<%= u._id %>">
+                    <option value="ACTIVE" <%= u.memberStatus === 'ACTIVE' ? 'selected' : '' %>>ACTIVE</option>
+                    <option value="BLOCK" <%= u.memberStatus === 'BLOCK' ? 'selected' : '' %>>BLOCK</option>
+                    <option value="DELETE" <%= u.memberStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
+                  </select>
                 </td>
               </tr>
               <% }) %>
@@ -56,6 +54,8 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript" src="/js/users.js"></script>
 </body>
 
 <%- include('includes/footer') %>

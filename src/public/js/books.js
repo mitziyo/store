@@ -10,7 +10,10 @@ $(function () {
       });
       const result = response.data;
       if (result.data) {
-        $(`#${id}.book-status-select`).blur();
+        const el = $(`#${id}.book-status-select`);
+        el.removeClass("process pause delete");
+        el.addClass(bookStatus === "PROCESS" ? "process" : bookStatus === "PAUSE" ? "pause" : "delete");
+        el.blur();
       } else alert("Book update failed!");
     } catch (err) {
       console.log(err);
