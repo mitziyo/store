@@ -3,9 +3,7 @@ import Errors, { HttpCode, Message } from "../libs/Error";
 import { MemberInput, Member, LoginInput, MemberUpdateInput } from "../libs/types/member";
 import MemberModel from "../schema/Member.model";
 import { shapeIntoMongooseObjectId } from "../libs/config";
-// Start 3
 import * as bcrypt from "bcryptjs";
-// End 3
 
 class MemberService {
   private readonly memberModel;
@@ -13,7 +11,6 @@ class MemberService {
     this.memberModel = MemberModel;
   }
 
-  // Start 3
   /** SPA */
   public async signup(input: MemberInput): Promise<Member> {
     const salt = await bcrypt.genSalt();
@@ -52,7 +49,6 @@ class MemberService {
   }
 
   /** SSR */
-  // End 3
   public async processSignup(input: MemberInput): Promise<Member> {
     const exist = await this.memberModel
       .findOne({ memberType: MemberType.STORE })

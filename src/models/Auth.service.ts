@@ -1,4 +1,3 @@
-// Start 4
 import { AUTH_TIMER } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Error";
 import { Member } from "../libs/types/member";
@@ -24,4 +23,3 @@ class AuthService {
 }
 
 export default AuthService;
-// End 4

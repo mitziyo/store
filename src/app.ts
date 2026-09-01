@@ -3,6 +3,7 @@ import path from "path"; // fayl yo'llarini (views/public) qurish uchun
 import router from "./router"; // SPA/REST router ("/")
 import routerAdmin from "./router-admin"; // SSR/EJS admin router ("/admin")
 import morgan from "morgan"; // har bir HTTP-so'rovni konsolga log qiladi
+import cookieParser from "cookie-parser"; // SPA'ning JWT-cookie'sini o'qish uchun
 import session from "express-session"; // login-holatini cookie orqali saqlaydi
 import MongoStore from "connect-mongo"; // sessiyalarni xotirada emas, MongoDB'da saqlash uchun
 import { MORGAN_FORMAT } from "./libs/config"; // morgan log-formati
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static("./uploads")); // signup/kitob rasmlari shu yerga saqlanadi, lekin public/ ichida emas edi
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan(MORGAN_FORMAT));
 /** 2 - SESSION **/
 app.use(
