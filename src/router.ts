@@ -4,7 +4,7 @@ import memberController from "./controllers/member.controller";
 import makeUploader from "./libs/utils/uploader";
 
 /***** Member *****/
-
+router.get("/member/store", memberController.getStore);
 router.post("/member/login", memberController.login);
 router.post("/member/signup", memberController.signup);
 router.post("/member/logout", memberController.verifyAuth, memberController.logout);
