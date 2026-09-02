@@ -1,5 +1,7 @@
 console.log("Books frontend javascript file");
 
+let editingBookId = null;
+
 $(function () {
   $(".book-status-select").on("change", async function (e) {
     const id = e.target.id;
@@ -27,10 +29,63 @@ $(function () {
   });
 
   $("#cancel-btn").on("click", () => {
+    resetBookForm();
     $(".book-form-card").slideToggle(200);
     $("#process-btn").css("display", "inline-flex");
   });
+
+  $(".edit-book-btn").on("click", function () {
+    const btn = $(this);
+    editingBookId = btn.data("id");
+    $(".book-name").val(btn.data("name"));
+    $(".book-price").val(btn.data("price"));
+    $(".book-left-count").val(btn.data("left"));
+    $(".book-genre").val(btn.data("genre"));
+    $(".book-format").val(btn.data("format"));
+    $(".book-desc").val(btn.data("desc"));
+
+    $("#book-form-title").text("Edit Book");
+    $("#create-btn").text("Update");
+    $("#book-image-row").hide();
+
+    $(".book-form-card").slideDown(300);
+    $("#process-btn").css("display", "none");
+  });
+
+  $(".book-form-card").on("submit", async function (e) {
+    if (!validateBookForm()) {
+      e.preventDefault();
+      return;
+    }
+    if (!editingBookId) return; // yangi kitob: standart multipart submit (rasmlar bilan) davom etadi
+
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(`/admin/book/${editingBookId}`, {
+        bookName: $(".book-name").val(),
+        bookPrice: Number($(".book-price").val()),
+        bookLeftCount: Number($(".book-left-count").val()),
+        bookGenre: $(".book-genre").val(),
+        bookFormat: $(".book-format").val(),
+        bookDesc: $(".book-desc").val(),
+      });
+      if (response.data.data) window.location.reload();
+      else alert("Book update failed!");
+    } catch (err) {
+      console.log(err);
+      alert("Book update failed!");
+    }
+  });
 });
+
+function resetBookForm() {
+  editingBookId = null;
+  $(".book-form-card")[0].reset();
+  $("#book-form-title").text("New Book Detail");
+  $("#create-btn").text("Create");
+  $("#book-image-row").show();
+}
 
 function validateBookForm() {
   const bookName = $(".book-name").val();

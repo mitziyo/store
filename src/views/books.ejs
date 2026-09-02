@@ -51,7 +51,20 @@
                 </td>
                 <td>
                   <div class="dash-row-actions">
-                    <button title="Edit"><i class="fa-solid fa-pen"></i></button>
+                    <button
+                      type="button"
+                      title="Edit"
+                      class="edit-book-btn"
+                      data-id="<%= book._id %>"
+                      data-name="<%= book.bookName %>"
+                      data-price="<%= book.bookPrice %>"
+                      data-left="<%= book.bookLeftCount %>"
+                      data-genre="<%= book.bookGenre %>"
+                      data-format="<%= book.bookFormat %>"
+                      data-desc="<%= book.bookDesc || '' %>"
+                    >
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -64,13 +77,12 @@
         </div>
 
         <form
-          onsubmit="return validateBookForm()"
           action="/admin/book/create"
           method="POST"
           class="dash-form-card book-form-card"
           enctype="multipart/form-data"
         >
-          <h2>New Book Detail</h2>
+          <h2 id="book-form-title">New Book Detail</h2>
 
           <div class="dash-form-row">
             <div class="dash-form-field">
@@ -118,7 +130,7 @@
             </div>
           </div>
 
-          <div class="dash-form-row">
+          <div class="dash-form-row" id="book-image-row">
             <div class="dash-form-field full">
               <label>Book Images</label>
               <div class="dash-upload-frame">
