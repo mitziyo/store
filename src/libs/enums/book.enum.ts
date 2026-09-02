@@ -13,7 +13,6 @@ export enum BookStatus {
 export enum BookGenre {
   FICTION = "FICTION",
   NON_FICTION = "NON_FICTION",
-  BIOGRAPHY = "BIOGRAPHY",
   THRILLER = "THRILLER",
   ROMANCE = "ROMANCE",
   CHILDREN = "CHILDREN",
