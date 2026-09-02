@@ -1,0 +1,73 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
+
+<body>
+  <div class="dash-layout">
+    <%- include('includes/sidebar', { active: 'orders' }) %>
+
+    <div class="dash-main">
+      <%- include('includes/topbar') %>
+
+      <div class="dash-content">
+        <div class="dash-content-header">
+          <h1>Orders</h1>
+        </div>
+
+        <div class="dash-table-card">
+          <% if (orders.length) { %>
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach((order) => {
+                const customer = order.memberData[0];
+                const itemLabels = order.orderItems.map((item) => {
+                  const book = order.bookData.find((b) => String(b._id) === String(item.bookId));
+                  return `${book ? book.bookName : 'Unknown'} ×${item.itemQuantity}`;
+                });
+              %>
+              <tr>
+                <td>
+                  <div class="dash-row-media">
+                    <img class="dash-row-thumb round" src="/<%= customer?.memberImage || 'img/default.jpg' %>" alt="<%= customer?.memberNick || 'Unknown' %>" />
+                    <%= customer?.memberNick || 'Unknown' %>
+                  </div>
+                </td>
+                <td><%= itemLabels.join(', ') %></td>
+                <td>$<%= order.orderTotal %></td>
+                <td>
+                  <select
+                    class="dash-status-select order-status-select <%= order.orderStatus === 'PROCESS' ? 'process' : order.orderStatus === 'FINISH' ? 'finish' : order.orderStatus === 'PAUSE' ? 'pause' : 'delete' %>"
+                    id="<%= order._id %>"
+                  >
+                    <option value="PAUSE" <%= order.orderStatus === 'PAUSE' ? 'selected' : '' %>>PAUSE</option>
+                    <option value="PROCESS" <%= order.orderStatus === 'PROCESS' ? 'selected' : '' %>>PROCESS</option>
+                    <option value="FINISH" <%= order.orderStatus === 'FINISH' ? 'selected' : '' %>>FINISH</option>
+                    <option value="DELETE" <%= order.orderStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
+                  </select>
+                </td>
+                <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+          <% } else { %>
+          <div class="dash-empty">No orders yet.</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/js/orders.js"></script>
+</body>
+
+<%- include('includes/footer') %>

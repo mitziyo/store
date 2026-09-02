@@ -316,6 +316,11 @@
   color: #c5221f;
 }
 
+.dash-status-select.finish {
+  background-color: #e8f0fe;
+  color: #1a56db;
+}
+
 .dash-row-actions {
   display: flex;
   gap: 14px;

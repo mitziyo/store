@@ -110,6 +110,55 @@ class OrderService {
     }
     return result as unknown as Order;
   }
+
+  /** SSR */
+  public async getAllOrders(): Promise<Order[]> {
+    const result = await this.orderModel
+      .aggregate([
+        { $sort: { createdAt: -1 } },
+        {
+          $lookup: {
+            from: "orderItems",
+            localField: "_id",
+            foreignField: "orderId",
+            as: "orderItems",
+          },
+        },
+        {
+          $lookup: {
+            from: "books",
+            localField: "orderItems.bookId",
+            foreignField: "_id",
+            as: "bookData",
+          },
+        },
+        {
+          $lookup: {
+            from: "members",
+            localField: "memberId",
+            foreignField: "_id",
+            as: "memberData",
+          },
+        },
+      ])
+      .exec();
+
+    return result as unknown as Order[];
+  }
+
+  public async updateOrderStatus(id: string, orderStatus: OrderStatus): Promise<Order> {
+    const orderId = shapeIntoMongooseObjectId(id);
+    const result = await this.orderModel
+      .findOneAndUpdate(
+        { _id: orderId }, // do'kon egasi istalgan buyurtmani o'zgartira oladi, memberId cheklovisiz
+        { orderStatus: orderStatus },
+        { returnDocument: "after" },
+      )
+      .exec();
+
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    return result as unknown as Order;
+  }
 }
 
 export default OrderService;

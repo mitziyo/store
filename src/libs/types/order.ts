@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { OrderStatus } from "../enums/order.enum";
 import { Book } from "./book";
+import { Member } from "./member";
 
 export interface OrderItem {
   _id: mongoose.Types.ObjectId;
@@ -23,6 +24,7 @@ export interface Order {
   /** from aggregations **/
   orderItems: OrderItem[];
   bookData: Book[];
+  memberData?: Member[]; // faqat admin getAllOrders'da to'ldiriladi
 }
 
 export interface OrderItemInput {
