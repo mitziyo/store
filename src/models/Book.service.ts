@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Errors, { HttpCode, Message } from "../libs/Error";
 import { Book, BookInput, BookInquiry, BookUpdateInput } from "../libs/types/book";
 import BookModel from "../schema/Book.model";
@@ -34,6 +35,16 @@ class BookService {
       .exec();
 
     return result as unknown as Book[];
+  }
+
+  public async getBook(memberId: mongoose.Types.ObjectId | null, id: string): Promise<Book> {
+    const bookId = shapeIntoMongooseObjectId(id);
+    const result = await this.bookModel
+      .findOne({ _id: bookId, bookStatus: BookStatus.PROCESS })
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    // todo: if authenticated users => first => view log creation
+    return result as unknown as Book;
   }
 
   /** SSR */

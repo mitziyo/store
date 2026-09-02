@@ -20,6 +20,7 @@ router.get("/member/top-users", memberController.getTopUsers);
 
 /***** Book *****/
 router.get("/book/all", bookController.getBooks);
+router.get("/book/:id", memberController.retrieveAuth, bookController.getBook);
 
 /***** Order *****/
 

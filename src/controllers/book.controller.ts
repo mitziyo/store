@@ -3,7 +3,7 @@ import Errors, { HttpCode, Message } from "../libs/Error";
 import { T } from "../libs/types/common";
 import BookService from "../models/Book.service";
 import { BookInput } from "../libs/types/book";
-import { AdminRequest } from "../libs/types/member";
+import { AdminRequest, ExtendedRequest } from "../libs/types/member";
 import { BookInquiry } from "../libs/types/book";
 import { BookGenre } from "../libs/enums/book.enum";
 
@@ -28,6 +28,20 @@ bookController.getBooks = async (req: Request, res: Response) => {
     res.status(HttpCode.OK).json(result);
   } catch (err) {
     console.log("Error, getBooks:", err);
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+bookController.getBook = async (req: ExtendedRequest, res: Response) => {
+  try {
+    console.log("getBook");
+    const { id } = req.params as { id: string };
+    const memberId = req.member?._id ?? null;
+    const result = await bookService.getBook(memberId, id);
+    res.status(HttpCode.OK).json(result);
+  } catch (err) {
+    console.log("Error, getBook:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
