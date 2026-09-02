@@ -14,6 +14,14 @@ export interface Book {
   bookViews: number;
 }
 
+export interface BookInquiry {
+  order: string;
+  page: number;
+  limit: number;
+  bookGenre?: BookGenre;
+  search?: string;
+}
+
 export interface BookInput {
   bookStatus?: BookStatus;
   bookGenre: BookGenre;

@@ -4,10 +4,36 @@ import { T } from "../libs/types/common";
 import BookService from "../models/Book.service";
 import { BookInput } from "../libs/types/book";
 import { AdminRequest } from "../libs/types/member";
+import { BookInquiry } from "../libs/types/book";
+import { BookGenre } from "../libs/enums/book.enum";
 
 const bookService = new BookService();
 
 const bookController: T = {};
+
+/** SPA */
+bookController.getBooks = async (req: Request, res: Response) => {
+  try {
+    console.log("getBooks");
+    const { page, limit, order, bookGenre, search } = req.query;
+    const inquiry: BookInquiry = {
+      order: order ? String(order) : "createdAt", // berilmasa, yangi qo'shilganlar birinchi
+      page: page ? Number(page) : 1,
+      limit: limit ? Number(limit) : 8,
+    };
+    if (bookGenre) inquiry.bookGenre = bookGenre as BookGenre;
+    if (search) inquiry.search = String(search);
+
+    const result = await bookService.getBooks(inquiry);
+    res.status(HttpCode.OK).json(result);
+  } catch (err) {
+    console.log("Error, getBooks:", err);
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+/** SSR */
 bookController.getAllBooks = async (req: Request, res: Response) => {
   try {
     console.log("getAllBooks");
