@@ -5,12 +5,17 @@ import BookModel from "../schema/Book.model";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { BookStatus } from "../libs/enums/book.enum";
 import { T } from "../libs/types/common";
+import ViewService from "./View.service";
+import { ViewGroup } from "../libs/enums/view.enum";
+import { ViewInput } from "../libs/types/view";
 
 class BookService {
   private readonly bookModel;
+  public viewService;
 
   constructor() {
     this.bookModel = BookModel;
+    this.viewService = new ViewService();
   }
 
   /** SPA */
@@ -39,11 +44,28 @@ class BookService {
 
   public async getBook(memberId: mongoose.Types.ObjectId | null, id: string): Promise<Book> {
     const bookId = shapeIntoMongooseObjectId(id);
-    const result = await this.bookModel
+    let result = await this.bookModel
       .findOne({ _id: bookId, bookStatus: BookStatus.PROCESS })
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-    // todo: if authenticated users => first => view log creation
+
+    if (memberId) {
+      const input: ViewInput = {
+        memberId: memberId,
+        viewRefId: bookId,
+        viewGroup: ViewGroup.BOOK,
+      };
+      const existView = await this.viewService.checkViewExistence(input);
+
+      if (!existView) {
+        await this.viewService.insertMemberView(input);
+
+        result = await this.bookModel
+          .findByIdAndUpdate(bookId, { $inc: { bookViews: 1 } }, { returnDocument: "after" })
+          .exec();
+      }
+    }
+
     return result as unknown as Book;
   }
 
