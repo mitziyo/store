@@ -1,3 +1,4 @@
+import cors from "cors"; // boshqa portdagi (React) frontend'ga so'rov yuborishga ruxsat beradi
 import express from "express"; // HTTP-server va routing framework
 import path from "path"; // fayl yo'llarini (views/public) qurish uchun
 import router from "./router"; // SPA/REST router ("/")
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static("./uploads")); // signup/kitob rasmlari shu yerga saqlanadi, lekin public/ ichida emas edi
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors({ credentials: true, origin: true })); // ixtiyoriy domaindan serverga kelayotgan so'rovga ruxsat beradi
 app.use(cookieParser());
 app.use(morgan(MORGAN_FORMAT));
 /** 2 - SESSION **/

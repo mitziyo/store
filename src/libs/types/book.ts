@@ -12,6 +12,8 @@ export interface Book {
   bookDesc?: string;
   bookImages: string[];
   bookViews: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface BookInquiry {
