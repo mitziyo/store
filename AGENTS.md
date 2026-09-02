@@ -2208,6 +2208,18 @@ separately-analyzed sequence.
   Hardcover) sotilishi — alohida yozuv sifatidami yoki bitta yozuv
   ichida formatlar ro'yxati sifatidami?** — hali hal qilinmagan,
   keyinga qoldirildi (2026-08-31).
+- **Order schema vs haqiqiy frontend mos kelmasligi** (2026-09-02,
+  `src/lib/types/order.ts` bilan solishtirib topildi): frontend'da
+  `paymentMethod` (COD/CARD/STRIPE/SKRILL/BITPAY) — bizda umuman yo'q;
+  `shippingAddressId`, `subtotal`, `shippingFee`, `discount` — bizda
+  faqat `orderTotal`+`orderDelivery` (burak'ning soddaroq modeli);
+  `orderStatus`: frontend'da PENDING/PROCESSING/COMPLETED/CANCELLED/
+  REFUNDED, bizda burak'dan olingan PAUSE/PROCESS/FINISH/DELETE —
+  butunlay boshqacha; javobda frontend `orderItems[]` va
+  `productData[]` (aggregate/birlashtirilgan) kutadi, biz hozircha
+  faqat Order-boshini qaytaramiz; `productId`→bizda `bookId`. Qaror:
+  Book domenidagi kabi — hozircha burak'ning soddalashtirilgan
+  modelini qoldiramiz, moslashtirish (mapping) keyingi bosqichga.
 
 ### Known gaps / trade-offs in the original (flag, don't silently fix)
 - `accessToken` cookie is `httpOnly: false` (Step 43) — XSS-exposed by

@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Error";
 import { Member } from "../libs/types/member";
-import { Order, OrderItemInput } from "../libs/types/order";
+import { Order, OrderInquiry, OrderItemInput } from "../libs/types/order";
+import { T } from "../libs/types/common";
 import OrderModel from "../schema/Order.model";
 import OrderItemModel from "../schema/OrderItem.model";
 
@@ -51,6 +52,39 @@ class OrderService {
 
     const orderItemsState = await Promise.all(promisedList);
     console.log("orderItemsState:", orderItemsState);
+  }
+
+  public async getMyOrders(member: Member, inquiry: OrderInquiry): Promise<Order[]> {
+    const memberId = shapeIntoMongooseObjectId(member._id);
+    const match: T = { memberId: memberId };
+    if (inquiry.orderStatus) match.orderStatus = inquiry.orderStatus;
+
+    const result = await this.orderModel
+      .aggregate([
+        { $match: match },
+        { $sort: { updatedAt: -1 } }, // burak'da "updateAt" (yozuv xatosi) bo'lgan, saralash ishlamas edi
+        { $skip: (inquiry.page - 1) * inquiry.limit },
+        { $limit: inquiry.limit },
+        {
+          $lookup: {
+            from: "orderItems",
+            localField: "_id",
+            foreignField: "orderId",
+            as: "orderItems",
+          },
+        },
+        {
+          $lookup: {
+            from: "books",
+            localField: "orderItems.bookId",
+            foreignField: "_id",
+            as: "bookData",
+          },
+        },
+      ])
+      .exec();
+
+    return result as unknown as Order[];
   }
 }
 
