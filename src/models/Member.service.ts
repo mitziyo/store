@@ -87,6 +87,22 @@ class MemberService {
     return result as unknown as Member[]; // bo'sh ro'yxat ham to'g'ri holat, xato emas
   }
 
+  public async addUserPoint(member: Member, point: number): Promise<Member> {
+    const memberId = shapeIntoMongooseObjectId(member._id);
+    const result = await this.memberModel
+      .findOneAndUpdate(
+        {
+          _id: memberId,
+          memberType: MemberType.USER,
+          memberStatus: MemberStatus.ACTIVE,
+        },
+        { $inc: { memberPoints: point } },
+        { returnDocument: "after" },
+      )
+      .exec();
+    return result as unknown as Member;
+  }
+
   /** SSR */
   public async processSignup(input: MemberInput): Promise<Member> {
     const exist = await this.memberModel
