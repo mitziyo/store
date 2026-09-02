@@ -23,6 +23,7 @@
                 <th>Phone</th>
                 <th>Points</th>
                 <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -43,6 +44,22 @@
                     <option value="DELETE" <%= u.memberStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
                   </select>
                 </td>
+                <td>
+                  <div class="dash-row-actions">
+                    <button
+                      type="button"
+                      title="Edit"
+                      class="edit-user-btn"
+                      data-id="<%= u._id %>"
+                      data-nick="<%= u.memberNick %>"
+                      data-phone="<%= u.memberPhone %>"
+                      data-address="<%= u.memberAddress || '' %>"
+                      data-desc="<%= u.memberDesc || '' %>"
+                    >
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                  </div>
+                </td>
               </tr>
               <% }) %>
             </tbody>
@@ -51,6 +68,41 @@
           <div class="dash-empty">No users yet.</div>
           <% } %>
         </div>
+
+        <form class="dash-form-card user-form-card" style="display: none">
+          <h2>Edit User</h2>
+          <input type="hidden" class="user-id" />
+
+          <div class="dash-form-row">
+            <div class="dash-form-field">
+              <label>Nickname</label>
+              <input type="text" placeholder="Nickname" class="user-nick" />
+            </div>
+            <div class="dash-form-field">
+              <label>Phone</label>
+              <input type="text" placeholder="Phone" class="user-phone" />
+            </div>
+          </div>
+
+          <div class="dash-form-row">
+            <div class="dash-form-field full">
+              <label>Address</label>
+              <input type="text" placeholder="Address" class="user-address" />
+            </div>
+          </div>
+
+          <div class="dash-form-row">
+            <div class="dash-form-field full">
+              <label>Description</label>
+              <textarea class="user-desc"></textarea>
+            </div>
+          </div>
+
+          <div class="dash-form-actions">
+            <button type="button" class="dash-btn-secondary" id="user-cancel-btn">Cancel</button>
+            <button type="submit" class="dash-btn-primary" id="user-update-btn">Update</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
