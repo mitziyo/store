@@ -2144,6 +2144,24 @@ points awarded) works end-to-end without errors.
 **ONLY PROCEED WHEN:** the full lifecycle test passes. This is the last
 step — once it passes, the workflow is complete for this feature set.
 
+**DONE (2026-09-02):** implemented as `order.controller.ts`'s three
+response-shape fix — `res.json({ result })` → `res.json(result)` for
+`createOrder`/`getMyOrders`/`updateOrder`, matching burak's own final
+cleanup and bringing these three endpoints in line with every other SPA
+endpoint (`getStore`, `getBook`, `getBooks`, `updateMember`,
+`getMemberDetail` — all already unwrapped). Verified end-to-end: create →
+list → update to PROCESS → loyalty point awarded, all three responses
+confirmed unwrapped. `tsc --noEmit` clean across the whole project.
+
+**🎉 ALL 59 STEPS COMPLETE (2026-09-02).** Both surfaces are fully built:
+admin/SSR panel (session-auth, Steps 1-41) and SPA/public REST API
+(JWT-auth, Steps 42-59). Final smoke test confirmed all route groups
+respond correctly (admin pages 200, public Book/Member endpoints 200,
+guarded endpoints 401 without a token). Remaining open items are tracked
+in the "Eslatmalar ro'yxati" section above (Authors catalog, backend
+schema vs real `bstore-react` field-name mapping, status-select
+coloring) — these are deliberate deferrals, not gaps in this sequence.
+
 **NEXT STEP:** None — sequence complete. Future work would start a new,
 separately-analyzed sequence.
 
@@ -2193,6 +2211,11 @@ separately-analyzed sequence.
   yo'q (oddiy, bezaksiz select). Ranglarni qoldirish yoki burak'dagidek
   oddiy qilish haqida yakuniy qaror hali berilmagan.
 - **Backend schema vs haqiqiy frontend (`bstore-react`) mos kelmasligi**
+  — **HAL QILINDI (2026-09-02, integratsiya sessiyasida)**: maydon
+  nomlari, `BookStatus` va `BookGenre` (Biography olib tashlangach 7 ta)
+  ikkala tomonda ham endi aynan mos; faqat `bookFormat` uchun kichik
+  moslashtiruvchi jadval qoladi (frontend schema.org yozuvini ataylab
+  saqlaydi). Quyidagi eski yozuv tarixiy kontekst uchun qoldirilgan:
   (2026-08-31, `src/lib/types/product.ts` bilan solishtirib topildi):
   maydon nomlari (`bookName`→`title`, `bookPrice`→`price`,
   `bookLeftCount`→`stockCount`, `bookDesc`→`description`,
@@ -2220,6 +2243,13 @@ separately-analyzed sequence.
   faqat Order-boshini qaytaramiz; `productId`→bizda `bookId`. Qaror:
   Book domenidagi kabi — hozircha burak'ning soddalashtirilgan
   modelini qoldiramiz, moslashtirish (mapping) keyingi bosqichga.
+- **`bstore-react` Shop-sahifa: pagination'ni sidebar'ning pastki
+  chegarasiga (Apply Filters tugmasi bilan bir qatorga) tekislash**
+  (2026-09-02) — `.col-lg-9`ni flex-column qilib, pagination blokiga
+  `mt-auto` berish kerak (Bootstrap `.row` ustunlarni bir xil
+  balandlikka cho'zadi, shuning uchun bu ishlaydi); shu bilan birga
+  kitob 0 ta bo'lganda pagination umuman ko'rsatilmasligi kerak.
+  Keyinga qoldirildi, hali qilinmagan.
 
 ### Known gaps / trade-offs in the original (flag, don't silently fix)
 - `accessToken` cookie is `httpOnly: false` (Step 43) — XSS-exposed by

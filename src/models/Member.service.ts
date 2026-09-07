@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { MemberStatus, MemberType } from "../libs/enums/member.enum";
 import Errors, { HttpCode, Message } from "../libs/Error";
 import { MemberInput, Member, LoginInput, MemberUpdateInput } from "../libs/types/member";
@@ -87,8 +88,7 @@ class MemberService {
     return result as unknown as Member[]; // bo'sh ro'yxat ham to'g'ri holat, xato emas
   }
 
-  public async addUserPoint(member: Member, point: number): Promise<Member> {
-    const memberId = shapeIntoMongooseObjectId(member._id);
+  public async addUserPoint(memberId: mongoose.Types.ObjectId, point: number): Promise<Member> {
     const result = await this.memberModel
       .findOneAndUpdate(
         {

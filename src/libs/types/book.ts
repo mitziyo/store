@@ -22,6 +22,8 @@ export interface BookInquiry {
   limit: number;
   bookGenre?: BookGenre;
   search?: string;
+  priceMin?: number;
+  priceMax?: number;
 }
 
 export interface BookInput {

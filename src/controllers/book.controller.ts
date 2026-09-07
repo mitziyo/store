@@ -15,7 +15,7 @@ const bookController: T = {};
 bookController.getBooks = async (req: Request, res: Response) => {
   try {
     console.log("getBooks");
-    const { page, limit, order, bookGenre, search } = req.query;
+    const { page, limit, order, bookGenre, search, priceMin, priceMax } = req.query;
     const inquiry: BookInquiry = {
       order: order ? String(order) : "createdAt", // berilmasa, yangi qo'shilganlar birinchi
       page: page ? Number(page) : 1,
@@ -23,6 +23,8 @@ bookController.getBooks = async (req: Request, res: Response) => {
     };
     if (bookGenre) inquiry.bookGenre = bookGenre as BookGenre;
     if (search) inquiry.search = String(search);
+    if (priceMin) inquiry.priceMin = Number(priceMin);
+    if (priceMax) inquiry.priceMax = Number(priceMax);
 
     const result = await bookService.getBooks(inquiry);
     res.status(HttpCode.OK).json(result);

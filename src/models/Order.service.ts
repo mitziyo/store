@@ -106,7 +106,7 @@ class OrderService {
 
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     if (orderStatus === OrderStatus.PROCESS) {
-      await this.memberService.addUserPoint(member, 1);
+      await this.memberService.addUserPoint(memberId, 1);
     }
     return result as unknown as Order;
   }
@@ -157,6 +157,9 @@ class OrderService {
       .exec();
 
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    if (orderStatus === OrderStatus.PROCESS) {
+      await this.memberService.addUserPoint(result.memberId, 1);
+    }
     return result as unknown as Order;
   }
 }

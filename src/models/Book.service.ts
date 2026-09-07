@@ -26,6 +26,11 @@ class BookService {
     if (inquiry.search) {
       match.bookName = { $regex: new RegExp(inquiry.search, "i") };
     }
+    if (inquiry.priceMin !== undefined || inquiry.priceMax !== undefined) {
+      match.bookPrice = {};
+      if (inquiry.priceMin !== undefined) match.bookPrice.$gte = inquiry.priceMin;
+      if (inquiry.priceMax !== undefined) match.bookPrice.$lte = inquiry.priceMax;
+    }
 
     const sort: T =
       inquiry.order === "bookPrice" ? { [inquiry.order]: 1 } : { [inquiry.order]: -1 };
