@@ -24,7 +24,6 @@
       "@types/*": "tegishli paketlar uchun TypeScript turlari (faqat kompilyatsiya paytida kerak)",
       "nodemon": "fayl o'zgarganda serverni avtomatik qayta ishga tushiradi (start:dev)",
       "ts-node": "TypeScript'ni oldindan build qilmasdan to'g'ridan-to'g'ri ishga tushiradi",
-      "tsconfig-paths": "tsconfig'dagi path alias'larini ts-node'da hal qiladi (hozir ishlatilmaydi)",
       "typescript": "TypeScript kompilyatori (build, tsc --noEmit tekshiruvi)"
     }
   },
@@ -59,10 +58,8 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.2.0",
-    "@types/socket.io": "^3.0.2",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.4"
   }
 }
