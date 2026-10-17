@@ -63,11 +63,11 @@ const io = new SocketIOServer(server, {
 });
 
 let summaryClient = 0;
-io.on("connections", (socket) => {
+io.on("connect", (socket) => {
   summaryClient++;
   console.log(`Connection & total [${summaryClient}]`);
 
-  socket.on("disconnection", () => {
+  socket.on("disconnect", () => {
     summaryClient--;
     console.log(`Disconnetion & total [${summaryClient}]`);
   });
