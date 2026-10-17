@@ -55,10 +55,17 @@ app.use("/", router); // SPA: REACT / Middleware design patter
 
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
+  // socketio inctance
   cors: {
     origin: true,
     credentials: true,
   },
+});
+
+let summaryClient = 0;
+io.on("connections", (socket) => {
+  summaryClient++;
+  console.log(`Connection & total [${summaryClient}]`);
 });
 
 export default app;
