@@ -3,6 +3,31 @@
   "version": "1.0.0",
   "description": "Book store server",
   "main": "src/server.ts",
+  "//": {
+    "_note": "JSON izohni qo'llamaydi — npm/yarn \"//\" kalitini e'tiborsiz qoldiradi, shuning uchun paketlar tavsifi shu yerda",
+    "dependencies": {
+      "bcryptjs": "parollarni hash qilish va solishtirish (signup/login)",
+      "connect-mongo": "admin session'larini xotira o'rniga MongoDB'da saqlaydi",
+      "cookie-parser": "so'rovdagi cookie'larni o'qiydi (SPA'ning JWT accessToken cookie'si)",
+      "cors": "boshqa portdagi React frontend'dan cookie bilan so'rov yuborishga ruxsat beradi",
+      "dotenv": ".env faylidagi o'zgaruvchilarni process.env'ga yuklaydi",
+      "ejs": "admin panel sahifalari uchun server-side shablon (view engine)",
+      "express": "HTTP server va routing framework",
+      "express-session": "admin login holatini session cookie orqali saqlaydi",
+      "jsonwebtoken": "SPA foydalanuvchilari uchun JWT token yaratish va tekshirish",
+      "mongoose": "MongoDB bilan ishlash uchun ODM (schema/model)",
+      "morgan": "har bir HTTP so'rovni konsolga log qiladi",
+      "multer": "multipart formadan rasm yuklash (a'zo va kitob rasmlari)",
+      "socket.io": "real-time WebSocket ulanishlari (frontend bilan jonli aloqa)"
+    },
+    "devDependencies": {
+      "@types/*": "tegishli paketlar uchun TypeScript turlari (faqat kompilyatsiya paytida kerak)",
+      "nodemon": "fayl o'zgarganda serverni avtomatik qayta ishga tushiradi (start:dev)",
+      "ts-node": "TypeScript'ni oldindan build qilmasdan to'g'ridan-to'g'ri ishga tushiradi",
+      "tsconfig-paths": "tsconfig'dagi path alias'larini ts-node'da hal qiladi (hozir ishlatilmaydi)",
+      "typescript": "TypeScript kompilyatori (build, tsc --noEmit tekshiruvi)"
+    }
+  },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "connect-mongo": "^6.0.0",
