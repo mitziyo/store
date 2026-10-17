@@ -9,6 +9,8 @@ import session from "express-session"; // login-holatini cookie orqali saqlaydi
 import MongoStore from "connect-mongo"; // sessiyalarni xotirada emas, MongoDB'da saqlash uchun
 import { MORGAN_FORMAT } from "./libs/config"; // morgan log-formati
 import { T } from "./libs/types/common"; // umumiy index-turi ({[key:string]:any})
+import { Server as SocketIOServer } from "socket.io";
+import http from "http";
 
 const store = MongoStore.create({
   mongoUrl: String(process.env.MONGO_URL),
@@ -29,11 +31,11 @@ app.use(
   session({
     secret: String(process.env.SESSION_SECRET), // cookie imzosini shifrlash uchun kalit
     cookie: {
-      maxAge: 1000 * 3600 * 3,      // bu session id ni
-    },                              // cookiesga yozish uchun ishlatiladi
-    store: store,                   // sessionni xotira o'rniga MongoDB'da saqlaydi
-    resave: true,                   // o'zgarmagan sessionni ham har so'rovda qayta saqlaydi
-    saveUninitialized: true,        // hali bo'sh (init qilinmagan) sessionni ham darhol saqlaydi
+      maxAge: 1000 * 3600 * 3, // bu session id ni
+    }, // cookiesga yozish uchun ishlatiladi
+    store: store, // sessionni xotira o'rniga MongoDB'da saqlaydi
+    resave: true, // o'zgarmagan sessionni ham har so'rovda qayta saqlaydi
+    saveUninitialized: true, // hali bo'sh (init qilinmagan) sessionni ham darhol saqlaydi
   }),
 );
 
@@ -45,8 +47,12 @@ app.use(function (req, res, next) {
 /** 3 - VIEWS **/
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
 /** 4 - ROUTERS **/
+
 app.use("/admin", routerAdmin); // SSR: EJS
 app.use("/", router); // SPA: REACT / Middleware design patter
+
+const server = http.createServer(app);
 
 export default app;
