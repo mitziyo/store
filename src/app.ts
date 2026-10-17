@@ -54,5 +54,11 @@ app.use("/admin", routerAdmin); // SSR: EJS
 app.use("/", router); // SPA: REACT / Middleware design patter
 
 const server = http.createServer(app);
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: true,
+    credentials: true,
+  },
+});
 
 export default app;
