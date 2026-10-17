@@ -66,6 +66,11 @@ let summaryClient = 0;
 io.on("connections", (socket) => {
   summaryClient++;
   console.log(`Connection & total [${summaryClient}]`);
+
+  socket.on("disconnection", () => {
+    summaryClient--;
+    console.log(`Disconnetion & total [${summaryClient}]`);
+  });
 });
 
-export default app;
+export default server;
